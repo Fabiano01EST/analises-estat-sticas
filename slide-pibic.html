@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>UNIVERSIDADE ESTADUAL DA PARAÍBA CAMPUS l CENTRO DE CIÊNCIAS E TECNOLOGIA DEPARTAMENTO DE ESTATÍSTICA CURSO DE ESTATÍSTICA</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Fabiano Florentino dos Santos" />
+    <meta name="author" content="Orientador: Prof. Dr. Márcio Augusto de Albuquerque" />
+    <script src="libs/header-attrs-2.24/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# UNIVERSIDADE ESTADUAL DA PARAÍBA CAMPUS l CENTRO DE CIÊNCIAS E TECNOLOGIA DEPARTAMENTO DE ESTATÍSTICA CURSO DE ESTATÍSTICA
+]
+.author[
+### Fabiano Florentino dos Santos
+]
+.author[
+### Orientador: Prof. Dr. Márcio Augusto de Albuquerque
+]
+.institute[
+### COMPARAÇÃO DAS TÉCNICAS DE AGRUPAMENTO: ESTUDO DE CASO EM DADOS DE VACINAÇÃO E MORTALIDADE INFANTIL ENTRE OS ANOS DE 2011 A 2021.
+]
+.date[
+### CAMPINA GRANDE 06/11/23
+]
+
+---
+
+&lt;img src="img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png" width="15%" height="20%" style="display: block; margin: auto auto auto 0;" /&gt;
+
+
+
+&lt;!-- ### INTRODUÇÂO  --&gt;
+
+&lt;!-- ####ÁNALISE DE AGRUPAMENTOS --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- - ML (Machine Learning) é um subcampo da inteligência artificial (IA) que se concentra no desenvolvimento de algoritmos e modelos computacionais; --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!--  -  Deep learning com subárea de ML onde se faz uso de redes neurais artificiais com múltiplas camadas com o intuito de aprender cada vez mais dados cada vez mais complexos e contexto do trabalho em questão se faz uso das técnicas de aprendizado não supervisionado onde apenas especificamos o que se feito automaticamente independentemente do programa. --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- - Entre as estratégias de ML temos três tipos de aprendizados, incluindo aprendizado supervisionado, aprendizado não supervisionado e aprendizado por reforço; --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- - No contexto do trabalho em questão se faz uso das técnicas de aprendizado não supervisionado onde apenas especificamos o que se feito automaticamente independentemente do programa. --&gt;
+
+
+####INTRODUÇÃO A ANÁLISE DE AGRUPAMENTOS
+#####MOTIVAÇÕES
+
+--
+
+&lt;div style='text-align: justify; text-indent: 20px'&gt;  Recordamos que a necessidade de agrupar é algo intuitivo e inerente ao ser humano de &lt;strong&gt;ordenar os objetos segundo algum critério e posteriormente classificá-los.&lt;/strong&gt;&lt;/div&gt;
+
+--
+
+- &lt;div style="text-align: justify;"&gt; 
+Em áreas das ciências como a &lt;strong&gt;biologia&lt;/strong&gt;, na antiguidade estudos sobre a taxonomia que dizem  respeito à classificação dos seres vivos, o &lt;strong&gt;modelo taxonômico&lt;/strong&gt; proposto pelo filósofo grego Aristóteles (384-322 a.C.);
+
+&lt;/div&gt;
+
+--
+
+- &lt;div style="text-align: justify;"&gt;
+Podemos citar casos da vida cotidiana, por exemplo, quando uma criança na escola ao receber um &lt;strong&gt;conjunto de lápis para pintar um desenho, seleciona as principais cores&lt;/strong&gt; de seu gosto, para daí começar a pintar; 
+
+&lt;/div&gt;
+
+--
+
+- &lt;div style="text-align: justify;"&gt; outro exemplo, um &lt;strong&gt;assistente administrativo de uma empresa está organizando documentos em determinado setor&lt;/strong&gt;, é normalmente utilizado sistemas computacionais onde determinadas pastas se localizam separadas e listadas pelos nomes para otimizar o tempo e organização. 
+
+&lt;/div&gt;
+
+---
+&lt;img src="img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png" width="15%" height="20%" style="display: block; margin: auto auto auto 0;" /&gt;
+### Objetivos
+
+--
+
+- Objetivo Geral:
+
+--
+
+ - Análise, discussão e comparação acerca das técnicas de clusterização hirárquicas e não hierárquicas. 
+
+--
+
+- Objetivos Específicos:
+
+--
+
+ - tipos de conversões de variáveis da matriz de dados; 
+
+--
+
+ - as medidas, sendo essas de similaridade ou dissimilaridade;
+
+--
+
+ - Abordar as principais técnicas de agrupamentos hierárquicas e não-hierárquicas; 
+
+--
+
+ - Escolha do número ideal de K partições e posteriores requisitos da qualidade do agrupamento.
+
+--
+
+ - análise exploratória dos dados;
+seleção de variáveis;
+
+--
+
+ - interpretações posteriores dos resultados.
+
+--
+
+---
+&lt;img src="img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png" width="15%" height="20%" style="display: block; margin: auto auto auto 0;" /&gt;
+###REVISÃO BIBLIOGRÁFICA 
+####MATRIZ ORIGINAL E PROXIMIDADE
+
+&lt;p style="text-align: justify; text-indent: 20px"&gt; Devemos destacar os agrupamentos dos quais partirmos da matriz multivariada expressa na forma:&lt;/p&gt; 
+
+--
+
+`$$X = \begin{bmatrix}
+X_{11} &amp; X_{12} &amp; \ldots &amp; X_{1j} \\
+X_{21} &amp; X_{22} &amp; \ldots &amp; X_{2j} \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+X_{i1} &amp; X_{i2} &amp; \ldots &amp; X_{ij} \\
+\end{bmatrix}_{n \times p},$$`
+
+&lt;div style="text-align: justify;"&gt; conhecida como &lt;strong&gt;matriz multivariada/original&lt;/strong&gt;, possui dimensão \({n \times p}\), onde \(n\) é o número de observações e \(p\) é número de variáveis, lembramos que  \(i = 1, \ldots , n\) e \(j = 1 , \ldots , p.\) &lt;/div&gt;
+
+---
+&lt;img src="img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png" width="15%" height="20%" style="display: block; margin: auto auto auto 0;" /&gt;
+&lt;div style="text-align: justify; text-indent: 20px;" &gt; As variáveis podem ser &lt;strong&gt;categóricas&lt;/strong&gt; ou &lt;strong&gt;métricas&lt;/strong&gt;, podemos derivar e obter a matriz de &lt;strong&gt;proximidades&lt;/strong&gt; ou &lt;strong&gt;distâncias&lt;/strong&gt;, na forma: &lt;/div&gt;
+
+--
+`$$D = \begin{bmatrix}
+d_{11} &amp; d_{21} &amp; d_{31} &amp; \ldots &amp; d_{n1} \\
+d_{12} &amp; d_{22} &amp;  d_{32} &amp; \ldots &amp; d_{n2} \\
+d_{13} &amp; d_{23} &amp; d_{33}  &amp; \ldots  &amp; d_{n3} \\
+\vdots &amp; \vdots &amp; \vdots  &amp; \ddots &amp; \vdots \\
+d_{1n}&amp; d_{2n} &amp; d_{3n} &amp;\ldots &amp;  d_{nn}\\
+\end{bmatrix}_{n \times n}$$`
+
+ou na forma:
+
+`$$D = 
+\begin{bmatrix}
+d_{12} &amp;  &amp;  &amp;  &amp; \\
+d_{13} &amp; d_{23} &amp;  &amp;  &amp;  \\
+d_{14} &amp; d_{24} &amp; d_{34} &amp; &amp;  \\
+\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp;  \\
+d_{1n}&amp; d_{2n} &amp; d_{3n} &amp;\ldots &amp;  d_{nn}\\
+\end{bmatrix}_{(n-1) \times n}$$`
+
+---
+&lt;img src="img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png" width="15%" height="20%" style="display: block; margin: auto auto auto 0;" /&gt;
+
+#### Etapas iniciais da clusterização
+
+&lt;!-- &lt;!-- &lt;div style="text-align: justify; text-indent: 20px;"&gt; Habitualmente seguimos alguns critérios a priori para daí agrupar, como seleção e tratamentos nas variáveis coletadas.&lt;/div&gt; --&gt;
+
+&lt;!-- &lt;!-- -- --&gt; 
+
+&lt;!-- &lt;!-- - &lt;div style="text-align: justify;"&gt; A metodologia da clusterização, seleção de objetos, seleção de variáveis, transformação de variáveis, seleção da medida de semelhança ou dissemelhança, método de formação de clusters a aplicar, discussão e apresentação dos resultados. &lt;/div&gt; --&gt; 
+
+&lt;!-- -- --&gt;
+
+&lt;!-- &lt;div style="text-align: justify; text-indent: 20px;"&gt; (QUINTAL, 2005), menciona alguns tipos de transformação nos dados usamos sejam &lt;strong&gt;funções de transformação e funções de estandardização&lt;/strong&gt; como podemos observar: &lt;/div&gt; --&gt;
+
+
+&lt;!-- -- --&gt;
+
+
+&lt;!-- - &lt;div style="text-align: justify;"&gt; \(Z_{ij} = \sqrt{X_{ij}}\), dados com variância alta e consequentemente queremos estabilizar torando mais próxima de distribuição normal; &lt;/div&gt; --&gt;
+
+
+&lt;!-- -- --&gt;
+
+
+&lt;!-- - &lt;div style="text-align: justify;"&gt; \(Z_{ij} = \log{X_{ij}}\), temos o comportamento da variação de forma exponencial, podemos linearizar relações exponencias, assim como controlar a variância e aproximar de uma distribuição normal; &lt;/div&gt; --&gt;
+
+
+&lt;!-- -- --&gt;
+
+
+&lt;!-- - &lt;div style="text-align: justify;"&gt; \(Z_{ij} = \frac{X_{ij}-\bar{X_j}}{S_j}\), se faz útil quando queremos eliminar a influência de variáveis em outras escalas de valores; &lt;/div&gt; --&gt;
+
+
+&lt;!-- -- --&gt;
+
+
+&lt;!-- - &lt;div style="text-align: justify;"&gt; \(Z_{ij} = \frac{X_{ij}-Rmin_j}{Rmáx_j-Rmín_j}\), os valores podem variar em -1 a 1, assim como a média e o valor do desvio padrão podem variar diferentemente da aplicação da fórmula de padronização z-score. &lt;/div&gt; --&gt;
+
+
+####Principais medidas de distância
+
+&lt;div style="text-align: justify;text-indent: 20px;"&gt; Uma forma de mensurar o grau de parentesco entre dois objetos, ou que quantifique o quanto eles estão próximos ou afastados. Esta medida, segundo (BUSSAD et al., 1990) será chamada de coeficiente de parecença. &lt;/div&gt;
+
+--
+
+- &lt;div style="text-align: justify;"&gt; \({d_{ij} =  \left [\sum_{k = 1}^{p}(X_{ik}-X_{jk})^2 \right ]^{1/2}}\), a distância Euclidiana considerada a métrica a mais elementar dentre todas as outras medidas de distância, &lt;strong&gt;mede diretamente de um ponto ao outro os elementos&lt;/strong&gt;; &lt;/div&gt;
+
+
+--
+
+
+- &lt;div style="text-align: justify;"&gt;  \(e_{ij} =  \left [ \sum_{k = 1}^{p}\frac{(X_{ik}-X_{jk})^2}{n}  \right ]^{1/2}\), a distância Euclidiana Média indicada por \(e_{pq}\), tem como principal vantagem a &lt;strong&gt;falta de valores na matriz multivariada&lt;/strong&gt;; &lt;/div&gt;
+
+
+--
+
+
+- &lt;div style="text-align: justify;"&gt; \( d_{ij} = \sum_{k=1}^{p}\frac{|X_{ik}-X_{jk}|}{|X_{ik}|+|X_{jk}|} \), a distância Canberra se faz útil quando contemos &lt;strong&gt;outliers na distribuição&lt;/strong&gt;.Também utilizada em casos em que temos valores próximos de zero entre os elementos; &lt;/div&gt;
+
+
+---
+&lt;img src="img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png" width="15%" height="20%" style="display: block; margin: auto auto auto 0;" /&gt;
+- &lt;div style="text-align: justify;"&gt; \(d_{rs}^2 = (X_r- X_s)^TS^{-1}(X_r - X_s)\), a distância de Mahalanobis pode fornecer redução da dependência das &lt;strong&gt;unidades de medição&lt;/strong&gt;, além ser uma escolha viável em dados com &lt;strong&gt;alta correlação&lt;/strong&gt;;&lt;/div&gt;
+
+
+--
+
+
+- &lt;div style="text-align: justify;"&gt; \(d_{ij} = \sum_{k = 1}^{p} \left | X_{ik}-X_{jk} \right |\), a distância de Manhattan evidencia que os valores atípicos são consideravelmente &lt;strong&gt;menos afetados por valores do extremo da distribuição&lt;/strong&gt;.&lt;/div&gt;
+
+---
+&lt;!-- &lt;div style="text-align: justify;"&gt;Antes de tudo, quando nos interessamos em calcular qualquer &lt;strong&gt;semelhança entre dois elementos&lt;/strong&gt;, devemos ter em mente que estamos trabalhando com variáveis do tipo &lt;strong&gt;categóricas, nominais e ordinais&lt;/strong&gt;, inicialmente vamos &lt;strong&gt;particionar os K níveis/categorias das mesmas em (K-1) classes de variáveis binárias&lt;/strong&gt; as quais só podem assumir valores 0 e 1, sendo 0 a falta de um determinada característica de interesse e 1 a presença.&lt;/div&gt; --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- &lt;div style="text-align: center;"&gt; Tabela 1: tabela de contigência/frequência &lt;/div&gt; --&gt;
+
+&lt;!-- $$\begin{array}{ccc} --&gt;
+&lt;!-- \hline --&gt;
+&lt;!-- observação (p)/observação(q)&amp; presença &amp; ausência &amp; total \\ --&gt;
+&lt;!-- \hline --&gt;
+&lt;!-- presença &amp; a &amp; b &amp; a+b \\ --&gt;
+&lt;!-- ausência &amp; c  &amp; d &amp; c+d \\ --&gt;
+&lt;!-- \hline --&gt;
+&lt;!-- total &amp; a+b &amp; b+c &amp; n \\ --&gt;
+&lt;!-- \hline --&gt;
+&lt;!-- \end{array}$$ --&gt;
+&lt;!-- -- --&gt;
+
+
+&lt;!-- onde temos: --&gt;
+
+
+&lt;!-- -- --&gt;
+
+
+&lt;!-- - &lt;div&gt;Para \((a)\) , número de variáveis binárias em que há presença da característica nos objetos \((p)\) e \((q)\);&lt;/div&gt; --&gt;
+
+
+&lt;!-- -- --&gt;
+
+
+&lt;!-- - &lt;div&gt;Para \((b)\) , número de variáveis binárias em que a observação \((p)\) possuir a característica e \((q)\) não possui;&lt;/div&gt; --&gt;
+
+
+&lt;!-- -- --&gt;
+
+
+&lt;!-- - &lt;div&gt;Para \((c)\) , número de variáveis binárias em que a observação \((p)\) não possuir a característica e \((q)\) possui;&lt;/div&gt; --&gt;
+
+
+&lt;!-- -- --&gt;
+
+
+&lt;!-- - &lt;div&gt;Para \((d)\) , número de variáveis binárias em que há ausência da característica nos objetos \((p)\) e \((q)\).&lt;/div&gt; --&gt;
+
+
+&lt;!-- --- --&gt;
+
+&lt;!-- &lt;div style="text-align: justify;text-indent: 20px;"&gt;Dentre os principais coeficientes de similaridade temos:&lt;/div&gt; --&gt;
+
+
+&lt;!-- -- --&gt;
+
+
+&lt;!-- - &lt;div style="text-align: justify;"&gt; \(s_{pq} = \frac{a}{a+b+c}\), o coeficiente de Jaccard &lt;strong&gt;não considera a contagem de variáveis de ausência d&lt;/strong&gt;. Isso implica que quando temos respostas (0-0) esse coeficiente não julga necessário essa informação, portanto quando vamos calcular a proporção dos pares é obtida por meio da exclusão de d; &lt;/div&gt; --&gt;
+
+
+&lt;!-- -- --&gt;
+
+
+&lt;!-- - &lt;div style="text-align: justify;"&gt; \(s_{pq} = \frac{a+d}{a+b+c+d}\), o coeficiente de Ausência Conjunta por &lt;strong&gt;considerar d, nesse índice  consideramos todas as possibilidades da presença ou não dos atributos&lt;/strong&gt;, existe uma ponderação, uma caso especial quando \(b + c = 0\), \(S_{pq} = 1\), a recíproca vale para \(a + d = 0\), por conseguinte \(S_{pq} = 0\); &lt;/div&gt; --&gt;
+
+
+&lt;!-- -- --&gt;
+
+
+&lt;!-- - &lt;div style="text-align: justify;"&gt;\(s_{pq} = \frac{a}{a+b+c+d}\), o coeficiente de  Concordâncias Positivas, se classifica como um coeficiente de ausência conjunta, sendo assim uma variação privilegiada. Essa medida &lt;strong&gt;leva em consideração a presença do atributo \(\textbf{(1-1)}\)&lt;/strong&gt;, ou seja, \(a\) sobre o total de somas de todas as parcelas cujo qual varia num intervalo de \([0,1]\);&lt;/div&gt; --&gt;
+
+
+&lt;!-- -- --&gt;
+
+
+&lt;!-- - &lt;div style="text-align: justify;"&gt; \(s_{pq} = \frac{2(a+d)}{2(a+d)+c+d}\), o coeficiente de Sneath e Sokal, &lt;strong&gt;apresenta o dobro de peso nas presenças e ausências das simultâneas das características&lt;/strong&gt;, sendo usado em análise de estudos sobre Zoologia, Genética e varia num intervalo de [0,1] carrega a peculiaridade quando os pares de elementos apresentam valores em oposição serão julgados como elementos com pouca semelhança.&lt;/div&gt; --&gt;
+
+
+
+&lt;img src="img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png" width="15%" height="20%" style="display: block; margin: auto auto auto 0;" /&gt;
+#####Clusterização Hierárquica
+
+&lt;div style="text-align: justify; text-indent: 20px"&gt; Para dar início ao algoritmos hierárquicos, temos os &lt;strong&gt;critérios aglomerativo e divisivo.&lt;/strong&gt; Sendo o mais utilizado o meio aglomerativo. &lt;/div&gt;
+
+
+--
+
+
+- &lt;div style="text-align: justify;"&gt; O primeiro passo após a obtenção da matriz simétrica \(D : [n \times n]\) de distâncias ou reduzida \([(n-1) \times n]\), vamos à procura da menor distância entre os elementos dentre os \(n\) coletados;&lt;/div&gt;
+
+
+--
+
+
+- &lt;div style="text-align: justify;"&gt; Suponhamos que os objetos \(A\) e \(B\), possuem a menor dissimilaridade entre as demais, devemos atualizar \(D\), para \(D1\) onde aglutinamos os elementos, eliminando as colunas e linhas respectivas de objetos \(A\) e \(B\) criar exclusivamente para ambos uma linha e uma coluna;&lt;/div&gt;
+
+
+--
+
+
+- &lt;div style="text-align: justify;"&gt; Por meio da norma de encadeamento escolhido calculamos as distâncias do recém enumerado grupo \(AB\) em relação aos demais;&lt;/div&gt;
+
+
+--
+
+
+- &lt;div style="text-align: justify;"&gt; Repetimos o passo de atualizar a matriz \(D_1\),em \(D_2, D_3, \dots ,D_{N-2}, D_{N-1}\), até que não reste mais elementos para agrupar em \(D_{N-1}\), isso só ocorrerá depois de um total de \(N-1\) vezes, formando assim um único grupo com todos os objetos;&lt;/div&gt;
+
+
+---
+&lt;img src="img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png" width="15%" height="20%" style="display: block; margin: auto auto auto 0;" /&gt;
+
+- &lt;div style="text-align: justify;"&gt; Por último, por meio dos estágios de aglomeração e das distâncias dos agrupamentos, podemos construir um gráfico em formato de árvore conhecido como &lt;strong&gt;dendograma, fenograma, diagrama de árvore&lt;/strong&gt;.&lt;/div&gt;
+
+--
+
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="slide-pibic_files/figure-html/unnamed-chunk-9-1.png" alt="Figura 1: Exemplo de Dendograma"  /&gt;
+&lt;p class="caption"&gt;Figura 1: Exemplo de Dendograma&lt;/p&gt;
+&lt;/div&gt;
+---
+&lt;img src="img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png" width="15%" height="20%" style="display: block; margin: auto auto auto 0;" /&gt;
+
+Dentre os métodos de ligação entre grupos temos:
+
+--
+
+- &lt;div style="text-align: justify;"&gt;\(d_{AB} = min \left\{d_{ij}: i \in A, j \in B \right\}  \), conhecido como encadeamento único ou vizinho mais próximo, &lt;strong&gt;a principal desvantagem onde eventualmente, ao surgir um considerável volume de observações&lt;/strong&gt;, pode produzir clusters irregulares e desiguais.&lt;/div&gt;
+
+
+--
+
+
+- &lt;div style="text-align: justify;"&gt;\(d_{AB} = máx \left\{d_{ij}: i \in A, j \in B \right\} \), no encadeamento completo ou vizinho mais distante, dado o grupo recém-formados, grupos A  e B. Indo em oposição à metodologia anterior nesse tipo de ligação, tem a &lt;strong&gt;tendência de produzir clusters mais parecidos entre si&lt;/strong&gt;.&lt;/div&gt;
+
+
+--
+
+
+- &lt;div style="text-align: justify;"&gt;\(d_{AB} = \frac{\sum_{p = 1}^{N_a}\sum_{q = 1}^{N_b}d_{pq}}{(N_a + N_b)}\), no método de eucadeamento médio, a junção dos clusters \(A\) e \(B\) tem como característica a variabilidade entre ambos que podem ser menores, &lt;strong&gt;temos conglomerados mais homogêneos, sendo uma escolha em casos de existência de valores atípicos&lt;/strong&gt;.&lt;/div&gt;
+
+
+---
+&lt;img src="img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png" width="15%" height="20%" style="display: block; margin: auto auto auto 0;" /&gt;
+
+- &lt;div style="text-align: justify;"&gt;\(d_{A,B} = d( \bar{x_A} , \bar{x_B})\), no método do centroide definimos a medida de um agrupamento A e B como sendo a  distância euclidiana entre os centroides. Definimos que \(\bar{X_A}\) e \(\bar{X_C}\) são as médias aritméticas dos grupos. Também possui insensibilidade quanto a possível &lt;strong&gt;existência de valores atípicos &lt;/strong&gt; nos dados.&lt;/div&gt;
+
+
+--
+
+
+- &lt;div style="text-align: justify;"&gt; o fato de A conter um número maior de elementos que B, isso implica que o centroide \(\bar{X}_{AB}\) poderá estar mais perto de \(\bar{X_A}\) do que \(\bar{X_B}\) e com isso implicaria &lt;strong&gt;uma ponderação a cada um dos centroides, para evitar que este fato ocorra podemos utlizar o método da mediana&lt;/strong&gt;.&lt;/div&gt;
+
+
+--
+
+
+- &lt;div style="text-align: justify;"&gt; no critério Ward, temos à alteração de soma de quadrados dos erros com base nela usamos como pressuposto para &lt;strong&gt;aglutinar novos grupos de forma que a haja um aumento mínimo no total da soma de quadrados dos erros&lt;/strong&gt; ou a variabilidade seja mínima.&lt;/div&gt;
+
+--
+
+Para o grupo A temos:
+ 
+`$$ssw_A = {\sum_{i = 1}^{N_A}\sum_{j=1}^{p}( x_{ijA} - \bar{x}_{jA})^2}\cdot$$`
+---
+&lt;img src="img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png" width="15%" height="20%" style="display: block; margin: auto auto auto 0;" /&gt;
+Para o grupo B temos:
+`$$ssw_B = {\sum_{i = 1}^{N_B}\sum_{j=1}^{p}( x_{ijB} - \bar{x}_{jB})^2}\cdot$$`
+
+
+&lt;div style="text-align: justify;"&gt; Por conseguinte, o recém-formado grupo \(C\), calculamos o \(ssw_C\), fazendo a diferença \(ssw_C-(ssw_A+ssw_B)\), é com base nessa quantidade vamos unir os elementos tal forma que essa diferença seja mínima possível.&lt;/div&gt;
+
+---
+&lt;img src="img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png" width="15%" height="20%" style="display: block; margin: auto auto auto 0;" /&gt;
+#####Clusterização Não Hierárquica
+
+&lt;div style="text-align: justify;"&gt; Dentre os métodos de particionamentos ou de optimização temos K-means ou K-médias e versões alternativas, precisamos do número inicial de \(K\) grupos em contraposição a metodologia hierárquica.&lt;/div&gt;
+
+
+--
+
+
+ - &lt;div style="text-align: justify;"&gt;Selecionamos uma quantidade \(n\)-elementos em \(K\)-grupos arbitrários. (normalmente considera-se as sementes ou \(K\)-centroides com a média dos grupos)&lt;/div&gt;
+
+
+--
+
+
+ - &lt;div style="text-align: justify;"&gt; Calculamos os centroides e alocamos uma dada observação com base na distância euclidiana, seja ela menor em relação a algum centroide vizinho realocação imediata, caso contrário, optamos pela permanência do elemento. &lt;/div&gt;
+
+
+--
+
+
+ - &lt;div style="text-align: justify;"&gt; Repetirmos o passo de forma que não reste mais elementos que não possam ser mais trocados entre si, lembrando o fato que a forma de obtenção do centroide depende diretamente se houve ou não troca de elementos, ou seja, temos cálculos que se diferem por conta disso. &lt;/div&gt;
+ 
+---
+&lt;img src="img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png" width="15%" height="20%" style="display: block; margin: auto auto auto 0;" /&gt;
+&lt;div style="text-align: justify;"&gt; Lembramos que o vetor médio do cluster que ganha ou perde uma observação para seu vizinho é dada pela fórmula: &lt;/div&gt;
+
+`$$\bar{x} = \frac{N \bar{x} \pm x_p}{N\pm1}$$`
+&lt;div style="text-align: justify;"&gt; Uma forma de interpretar as devidas partições formadas, é por meio das medidas descritivas, tanto média com valor representativo com desvio padrão para medir o grau de dispersão das unidades envolvidas. &lt;/div&gt;
+
+---
+&lt;img src="img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png" width="15%" height="20%" style="display: block; margin: auto auto auto 0;" /&gt;
+####Determinação do número de grupos ideal e validação
+
+
+&lt;!-- &lt;div style="text-align: justify; text-indent: 20px"&gt; Nem sempre é viável a escolha da quantidade de grupos iniciais de forma subjetiva, estratégias metodológicas convenientes para se chegar a essa quantidade ideal e avaliar o agrupamento posterior, como veremos na técnicas hierárquicas e não hierárquicas.&lt;/div&gt; --&gt;
+
+
+Dentre as técnicas temos as mais usadas:
+
+--
+
+ 
+ - método do cotovelo;
+ - método da Silhueta;
+ - método da correlação cofenética (agrupamentos hierárquicos);
+&lt;!-- método de Rand e Rand ajustado. --&gt;
+
+--
+
+#####método do cotovelo
+
+&lt;div style="text-align: justify; text-indent: 20px"&gt; Aqui vamos considerar agrupamentos com diferentes números de K, onde podemos visualizar ao decorrer que aumentamos o número de K diminuímos consequentemente os valores dos erros quadráticos dos grupos. &lt;strong&gt;A melhor partição é justamente onde o gráfico tem um formato de cotovelo, ou seja, onde teve maior um decréscimo considerável a soma erros quadráticos total&lt;/strong&gt;.&lt;/div&gt;
+---
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="slide-pibic_files/figure-html/unnamed-chunk-16-1.png" alt="Figura 2: método do cotovelo, exemplo gráfico"  /&gt;
+&lt;p class="caption"&gt;Figura 2: método do cotovelo, exemplo gráfico&lt;/p&gt;
+&lt;/div&gt;
+---
+&lt;img src="img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png" width="15%" height="20%" style="display: block; margin: auto auto auto 0;" /&gt;
+#####método do silhueta
+
+&lt;div style="text-align: justify; text-indent: 20px"&gt; Outra forma de ir encontro ao valor ideal de &lt;em&gt;K&lt;/em&gt; é analisar a Silhueta que apresenta também a ideia de expressar essa quantidade ideal. Essa medida que &lt;strong&gt;expressa o quanto que um determinado objeto qualquer é similar a seu grupo &lt;/strong&gt;, de maneira geral é expresso na forma:&lt;/div&gt;
+
+
+--
+
+
+- &lt;div style="text-align: justify; text-indent: 20px"&gt; \(s(i) = \frac{b(i)-a(i)}{max(a(i);b(i))}\), o coeficiente de silhueta varia de numa escala de \([-1,1]\) indicando a divisão de boa qualidade quando \(s(i)\) tende ao valor 1;&lt;/div&gt;
+
+
+--
+
+
+ - &lt;div style="text-align: justify;"&gt; \(a(i) = \sum_{j \in C_l}\frac{d_{ij}}{n_l}\),  \(a(i)\) é a dessemelhança média de cada valor \(i\) pertencente ao grupo \(A\);&lt;/div&gt;
+
+
+--
+
+
+ - &lt;div style="text-align: justify;"&gt; \(b(i) = min_{i \neq C_k}[d_{iC_{k}}]\),  \(b(i)\), acaba sendo a dissimilaridade média de \(i\) em relação a unidades pertencentes aos grupos  \(C_k\), sendo \(C_k\) cada grupo a qual os elementos \(i\), não fazem parte do mesmo;&lt;/div&gt;
+
+
+--
+
+
+&lt;div style="text-align: justify;"&gt;Em caso de queremos utilizar a silhueta média para cada grupo e por agrupamento (coeficiente de sulhueta médio), é dado por:&lt;/div&gt;
+
+
+--
+
+
+&lt;div style="text-align: center;"&gt;\(SM_j = {\sum_{i = 1}^{n_j}\frac{s(i)}{n_j}}\) e \(CSM = {\sum_{i=1}^{n}\frac{s(i)}{n}}\)&lt;/div&gt;
+
+
+---
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="slide-pibic_files/figure-html/unnamed-chunk-18-1.png" alt="Figura 3: exemplo gráfico do coeficiente de silhueta médio (CMS)"  /&gt;
+&lt;p class="caption"&gt;Figura 3: exemplo gráfico do coeficiente de silhueta médio (CMS)&lt;/p&gt;
+&lt;/div&gt;
+---
+&lt;img src="img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png" width="15%" height="20%" style="display: block; margin: auto auto auto 0;" /&gt;
+#####correlação cofenética
+
+
+&lt;div style="text-align: justify; text-indent: 20px"&gt;Uma medida que visa medir o &lt;strong&gt;grau de distorção imposta ou não pela vertente hierárquica&lt;/strong&gt;, com ideal de  realizar correlação entre a matriz D (matriz fenética) com a obtida junto ao dendrograma, conhecida como (matriz cofenética). Tal correlação pode ser obtida:
+
+--
+
+&lt;div style="text-align: center;"&gt;\(r_{cof} = \frac{\sum_{i=1}{n}\sum_{j=i+1}{n}(c_{ij}-\bar{c})(s_{ij}-\bar{s})}{\sqrt{\sum_{i=1}^{n}\sum_{j=i+1}{n}(c_{ij}-\bar{c})^2} \sqrt{\sum_{i=1}^{n}\sum_{j=i+1}{n}(s_{ij}-\bar{s})^2}}\)&lt;/div&gt;
+
+
+--
+
+
+- &lt;div style="text-align: justify;"&gt;\(c_{ij}\): indica o nível de similaridade entre duas unidades obtidas junto a matriz cofenética;&lt;/div&gt;
+
+
+--
+
+
+- &lt;div style="text-align: justify;"&gt;\(s_{ij}\): indica o nível de similaridade entre duas unidades obtidas por meio da matriz D de dessemelhanças.&lt;/div&gt;
+
+
+--
+
+
+Conforme Mayer (2002) outras duas medidas para se obter a correlação `\(r_{cof}\)`, sendo uma dela a média da similaridade c:
+
+&lt;div style="text-align: center;"&gt;\(\bar{c} = \frac{2}{n(n-1)}\sum_{i=1}^{n}\sum_{j=i+1}^{n}c_{ij}\)
+e 
+
+\(\bar{s} = \frac{2}{n(n-1)}\sum_{i=1}^{n}\sum_{j=i+1}^{n}s_{ij}\)&lt;/div&gt;
+
+---
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="slide-pibic_files/figure-html/unnamed-chunk-20-1.png" alt="Figura 3: Gráfico de barra, números e percentuais de mortalidade"  /&gt;
+&lt;p class="caption"&gt;Figura 3: Gráfico de barra, números e percentuais de mortalidade&lt;/p&gt;
+&lt;/div&gt;
+---
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="slide-pibic_files/figure-html/unnamed-chunk-21-1.png" alt="Figura 4: Gráfico de barra, números e percentuais de imunização"  /&gt;
+&lt;p class="caption"&gt;Figura 4: Gráfico de barra, números e percentuais de imunização&lt;/p&gt;
+&lt;/div&gt;
+---
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="slide-pibic_files/figure-html/unnamed-chunk-22-1.png" alt="Figura 5: Histogramas, visualização das densidades"  /&gt;
+&lt;p class="caption"&gt;Figura 5: Histogramas, visualização das densidades&lt;/p&gt;
+&lt;/div&gt;
+---
+
+&lt;div style="text-align: center; margin-bottom: 20px;"&gt; Tabela 1: Medidas descritivas &lt;/div&gt;$$\begin{array}{ccc}
+\hline
+Medidas \hspace{0.2cm} Resumo &amp; Imunização &amp; Óbitos \\
+\hline
+Mediana &amp; 25501 &amp; 2706 \\
+Desvio \hspace{0.2cm} padrão &amp; 114187 &amp;4454 \\
+Máximo  &amp; 587562 &amp; 22197 \\
+Mínimo &amp; 5160 &amp; 966 \\
+\hline
+\end{array}$$ &lt;div style="text-align: justify;text-indent: 20px;"&gt; Medidas descritivas para ambas as variáveis, em todos os estados e distrito federal durante 2011-2021 houve um o maior valor máximo 22197 casos de mortalidade, porém, um total máximo de vacinação de 587562.&lt;/div&gt;
+
+--
+
+&lt;div style="text-align: center;"&gt; Tabela 2: teste de correlação de Kendall&lt;/div&gt; $$\begin{array}{cccc}
+\hline
+Hipóteses &amp; Estatística \hspace{0.2cm} do \hspace{0.2cm} teste &amp; P-valor &amp; Correlação \\
+\hline
+H_0: \rho = 0 &amp; Valor \hspace{0.2cm} observado &amp; 1.763e-07 &amp; Kendall
+\\
+H_1: \rho \neq 0 &amp; \textit{T}=291 &amp; &amp; \tau = 0.6581197   \\
+\hline
+\end{array}$$ &lt;div style="text-align: justify;text-indent: 20px;"&gt; O P-valor sendo suficientemente pequeno que o nível de significância do teste que é de 0,05 (5%), logo rejeitamos a hipótese de que a correlação é nula.&lt;/div&gt;
+
+
+---
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="slide-pibic_files/figure-html/unnamed-chunk-23-1.png" alt="Figura 6: método do cotovelo"  /&gt;
+&lt;p class="caption"&gt;Figura 6: método do cotovelo&lt;/p&gt;
+&lt;/div&gt;
+
+---
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="slide-pibic_files/figure-html/unnamed-chunk-24-1.png" alt="Figura 7: Método do coeficiente silhueta médio (CSM)"  /&gt;
+&lt;p class="caption"&gt;Figura 7: Método do coeficiente silhueta médio (CSM)&lt;/p&gt;
+&lt;/div&gt;
+---
+
+&lt;!-- ```{r, echo=FALSE, message=FALSE, results="hide", fig.align="center", fig.cap= "Figura 9: Dendrograma, normas de fusão simples" , fig.dim = c(13.7, 11)} --&gt;
+&lt;!-- dendogramo_dados_1 = data.frame(dendogramo_dados_[,c(1,3,4)], row.names = 1) --&gt;
+&lt;!-- dendogramo_dados_1. = scale(dendogramo_dados_1) --&gt;
+
+&lt;!-- l = get_dist(dendogramo_dados_1., method = "euclidian") --&gt;
+&lt;!-- fviz_dist(l,order = TRUE, --&gt;
+&lt;!--           show_labels = TRUE, --&gt;
+&lt;!--           lab_size = 9, --&gt;
+&lt;!--           gradient = list(low = "white", mid = "blue", high = "red") --&gt;
+&lt;!-- ) --&gt;
+
+&lt;!-- ``` --&gt;
+
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="slide-pibic_files/figure-html/unnamed-chunk-25-1.png" alt="Figura 8: Critério Centroide"  /&gt;
+&lt;p class="caption"&gt;Figura 8: Critério Centroide&lt;/p&gt;
+&lt;/div&gt;
+---
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="slide-pibic_files/figure-html/unnamed-chunk-26-1.png" alt="Figura 9: Critério Ward"  /&gt;
+&lt;p class="caption"&gt;Figura 9: Critério Ward&lt;/p&gt;
+&lt;/div&gt;
+---
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="slide-pibic_files/figure-html/unnamed-chunk-27-1.png" alt="Figura 10: Critério de ligação Média"  /&gt;
+&lt;p class="caption"&gt;Figura 10: Critério de ligação Média&lt;/p&gt;
+&lt;/div&gt;
+---
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="slide-pibic_files/figure-html/unnamed-chunk-28-1.png" alt="Figura 11: Avaliação (silhouette plot) métodos hierárquicos"  /&gt;
+&lt;p class="caption"&gt;Figura 11: Avaliação (silhouette plot) métodos hierárquicos&lt;/p&gt;
+&lt;/div&gt;
+---
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="slide-pibic_files/figure-html/unnamed-chunk-29-1.png" alt="Figura 12: Dendrograma, partição final"  /&gt;
+&lt;p class="caption"&gt;Figura 12: Dendrograma, partição final&lt;/p&gt;
+&lt;/div&gt;
+---
+&lt;!-- &lt;div style="text-align: center; margin-bottom: 20px;"&gt; Tabela 3: Dispersão dos conglomerados (Algoritmo ward) &lt;/div&gt; --&gt;
+&lt;!-- $$\begin{array}{cccc} --&gt;
+&lt;!-- \hline --&gt;
+&lt;!-- Cluters  &amp; Silhueta \hspace{0.2cm} Média &amp; Desvio \hspace{0.2cm} Padrão (óbitos) &amp; Desvio \hspace{0.2cm} Padrão (vacinação)\\ --&gt;
+&lt;!-- \hline --&gt;
+&lt;!-- 1 &amp; 0,78717671 &amp; 776 &amp; 7614 \\ --&gt;
+&lt;!-- 2 &amp; 0,58281543 &amp; 901 &amp; 6040 \\ --&gt;
+&lt;!-- 3 &amp; 0,09777147 &amp; 6416 &amp; 184913 \\ --&gt;
+&lt;!-- \hline --&gt;
+&lt;!-- \end{array}$$ --&gt;
+&lt;!-- Podemos observar que apenas o cluster 3 possui menor valor em média, os outros como estão mais próximo de 1, isso simboliza o quão bem estão os elementos têm pouca variação, assim como os desvios padrões. --&gt;
+&lt;!-- -- --&gt;
+&lt;!-- &lt;div style="text-align: center; margin-bottom: 20px;"&gt; Tabela 4: Índice de Rand e Rand ajustado, similaridade entre os métodos de ligação. &lt;/div&gt; --&gt;
+&lt;!-- $$\begin{array}{ccc} --&gt;
+&lt;!-- \hline --&gt;
+&lt;!--  &amp; Rand &amp; Rand \hspace{0.2cm} ajustado \\ --&gt;
+&lt;!-- \hline --&gt;
+&lt;!-- (a) &amp; 0,4700855 &amp; 0,08609105 \\ --&gt;
+&lt;!-- (b) &amp; 0,4700855 &amp; 0,08609105 \\ --&gt;
+&lt;!-- (c) &amp; 0,8632479 &amp; 0,44941176 \\ --&gt;
+&lt;!-- \hline --&gt;
+&lt;!-- \end{array}$$ --&gt;
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="slide-pibic_files/figure-html/unnamed-chunk-30-1.png" alt="Figura 13: algoritmo K-means"  /&gt;
+&lt;p class="caption"&gt;Figura 13: algoritmo K-means&lt;/p&gt;
+&lt;/div&gt;
+---
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="slide-pibic_files/figure-html/unnamed-chunk-31-1.png" alt="Figura 14: algoritmo PAM"  /&gt;
+&lt;p class="caption"&gt;Figura 14: algoritmo PAM&lt;/p&gt;
+&lt;/div&gt;
+---
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="slide-pibic_files/figure-html/unnamed-chunk-32-1.png" alt="Figura 15: algoritmo FCM"  /&gt;
+&lt;p class="caption"&gt;Figura 15: algoritmo FCM&lt;/p&gt;
+&lt;/div&gt;
+---
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="slide-pibic_files/figure-html/unnamed-chunk-33-1.png" alt="Figura 16: Avaliação (silhouette plot) métodos não hierárquicos"  /&gt;
+&lt;p class="caption"&gt;Figura 16: Avaliação (silhouette plot) métodos não hierárquicos&lt;/p&gt;
+&lt;/div&gt;
+---
+Hierarquia dos grupos em mortes e imunização, método Ward. 
+
+- Santa Catarina, Paraná, Rio Grande do Sul, São Paulo, Bahia, Minas Gerais e Rio de Janeiro;
+- Amazonas, Pará, Ceará, Maranhão e Pernambuco;
+- Roraima, Rondônia, Sergipe, Amapá, Acre, Tocantins, Goiás, Rio grande do Norte, Espírito Santo, Mato Grosso, Mato Grosso do Sul, Alagoas, Piauí, Paraíba e o Distrito Federal
+---
+
+####REFERÊNCIAS
+
+BRASIL. Ministério da Saúde. **DATASUS (DATASUS  Tecnologia da Informação a Serviço do SUS)**. Informações estatísticas - óbitos infantis [201-]. Disponível em: http://tabnet.datasus.gov.br/cgi/deftohtm.exe?sim/cnv/obt10uf.def. Acesso em: 04 jun. 2023.
+
+BRASIL. Ministério da Saúde. **SI-PNI (Sistema de Informação do Programa Nacional de Imunizações). Informações estatísticas - doses aplicadas.** [2013]. Disponível em: http://pni.datasus.gov.br/inf_estatistica_dose_dupla.asp. Acesso em: 04 jun. 2023.
+
+QUINTAL, G. M. C. C. **Análise de clusters aplicada ao Sucesso/Insucesso em Matemática**. 2006. 184 p. Dissertação de mestrado — Universidade da Madeira Departamento de Matemática e Engenharias, Funchal, 2006. Disponível em: https://digituma.uma.pt. Acesso em: 17 out. 2022.
+
+KASSAMBARA, Alboukadel. **K-Medoids-PAM concept. In: K-Medoids in R: Algorithm and Practical Examples.** [S. l.], 2018. Disponível em: https://www.datanovia.com/en/lessons/k-medoids-in-r-algorithm-and-practical-examples/. Acesso em: 2 ago. 2023.
+
+FAVERO, L. P.; BELFIORE, P. **MANUAL DA ANÁLISE DE DADOS: Estatística e Modelagem Multivariada com Excel, SPSS, e Stata. 1ª** . ed. Rio de Janeiro: Elsevier Editora, 2017. 1187 p.
+
+---
+&lt;img src="img/Opera Instantâneo_2023-11-04_150854_docs.google.com.png" width="100%" height="100%" style="display: block; margin: auto;" /&gt;
+---
+&lt;img src="img/5YcO.gif" width="100%" height="100%" style="display: block; margin: auto auto auto 0;" /&gt;
+##Um forte abraço, nos vemos em breve quem sabe! ;)
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

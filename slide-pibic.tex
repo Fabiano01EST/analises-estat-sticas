@@ -1,0 +1,522 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\renewcommand{\rmdefault}{bch}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={COMPARAÇÃO DAS TÉCNICAS DE AGRUPAMENTO:},
+  pdfauthor={Fabiano F. dos Santos},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{COMPARAÇÃO DAS TÉCNICAS DE AGRUPAMENTO:}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{ESTUDO DE CASO EM DADOS DE VACINAÇÃO E MORTALIDADE INFANTIL
+ENTRE OS ANOS DE 2011 A 2021.}
+\author{Fabiano F. dos Santos}
+\date{CAMPINA GRANDE DD/MM/AA}
+
+\begin{document}
+\maketitle
+
+\hypertarget{introduuxe7uxe2o}{%
+\subsubsection{INTRODUÇÂO}\label{introduuxe7uxe2o}}
+
+\#\#\#\#ÁNALISE DE AGRUPAMENTOS
+
+--
+
+\begin{itemize}
+\tightlist
+\item
+  ML (Machine Learning) é um subcampo da inteligência artificial (IA)
+  que se concentra no desenvolvimento de algoritmos e modelos
+  computacionais;
+\end{itemize}
+
+--
+
+\begin{itemize}
+\tightlist
+\item
+  Deep learning com subárea de ML onde se faz uso de redes neurais
+  artificiais com múltiplas camadas com o intuito de aprender cada vez
+  mais dados cada vez mais complexos e contexto do trabalho em questão
+  se faz uso das técnicas de aprendizado não supervisionado onde apenas
+  especificamos o que se feito automaticamente independentemente do
+  programa.
+\end{itemize}
+
+--
+
+\begin{itemize}
+\tightlist
+\item
+  Entre as estratégias de ML temos três tipos de aprendizados, incluindo
+  aprendizado supervisionado, aprendizado não supervisionado e
+  aprendizado por reforço;
+\end{itemize}
+
+--
+
+\begin{itemize}
+\tightlist
+\item
+  No contexto do trabalho em questão se faz uso das técnicas de
+  aprendizado não supervisionado onde apenas especificamos o que se
+  feito automaticamente independentemente do programa.
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\#\#\#MOTIVAÇÕES
+
+--
+
+Recordamos que a necessidade de agrupar é algo intuitivo e inerente ao
+ser humano se levarmos em consideração que para sobreviver e compreender
+os fenômenos precisamos ordenar os objetos segundo algum critério e
+posteriormente classificá-los.
+
+--
+
+\begin{itemize}
+\item
+  Em áreas das ciências como a biologia, na antiguidade estudos sobre a
+  taxonomia que dizem respeito à classificação dos seres vivos, é
+  importante enfatizar que um dos primeiros a sugerir um modelo
+  taxonômico foi o filósofo grego Aristóteles (384-322 a.C.);
+\end{itemize}
+
+--
+
+\begin{itemize}
+\item
+  Podemos citar casos da vida cotidiana, por exemplo, quando uma criança
+  na escola ao receber um conjunto de lápis para pintar um desenho,
+  seleciona as principais cores de seu gosto, para daí começar a pintar;
+\end{itemize}
+
+--
+
+\begin{itemize}
+\item
+  Por exemplo, quando um assistente administrativo de uma empresa está
+  organizando documentos em determinado setor, é normalmente utilizado
+  sistemas computacionais onde determinadas pastas se localizam
+  separadas e listadas pelos nomes para otimizar o tempo e organização.
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{objetivos}{%
+\subsubsection{Objetivos}\label{objetivos}}
+
+--
+
+\begin{itemize}
+\tightlist
+\item
+  Objetivo Geral:
+\end{itemize}
+
+--
+
+\begin{itemize}
+\tightlist
+\item
+  Análise, discussão e comparação acerca das técnicas de clusterização
+  hirárquicas e não hierárquicas.
+\end{itemize}
+
+--
+
+\begin{itemize}
+\tightlist
+\item
+  Objetivos Específicos:
+\end{itemize}
+
+--
+
+\begin{itemize}
+\tightlist
+\item
+  tipos de conversões de variáveis da matriz de dados;
+\end{itemize}
+
+--
+
+\begin{itemize}
+\tightlist
+\item
+  as medidas, sendo essas de similaridade ou dissimilaridade;
+\end{itemize}
+
+--
+
+\begin{itemize}
+\tightlist
+\item
+  Abordar as principais técnicas de agrupamentos hierárquicas e
+  não-hierárquicas;
+\end{itemize}
+
+--
+
+\begin{itemize}
+\tightlist
+\item
+  Escolha do número ideal de K partições e posteriores requisitos da
+  qualidade do agrupamento.
+\end{itemize}
+
+--
+
+\begin{itemize}
+\tightlist
+\item
+  análise exploratória dos dados; seleção de variáveis;
+\end{itemize}
+
+--
+
+\begin{itemize}
+\tightlist
+\item
+  interpretações posteriores dos resultados.
+\end{itemize}
+
+--
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\#\#\#REVISÃO BIBLIOGRÁFICA \#\#\#\#MATRIZ ORIGINAL E PROXIMIDADE --
+
+Devemos destacar os agrupamentos dos quais partirmos da matriz
+multivariada expressa na forma:
+
+--
+
+\[X = \begin{bmatrix}
+X_{11} & X_{12} & \ldots & X_{1j} \\
+X_{21} & X_{22} & \ldots & X_{2j} \\
+\vdots & \vdots & \ddots & \vdots \\
+X_{i1} & X_{i2} & \ldots & X_{ij} \\
+\end{bmatrix}_{n \times p},\]
+
+conhecida como matriz multivariada/original, possui dimensão
+\({n \times p}\), onde \(n\) é o número de observações e \(p\) é número
+de variáveis, lembramos que \(i = 1, \ldots , n\) e
+\(j = 1 , \ldots , p.\)
+
+--
+
+As variáveis podem ser categóricas ou métricas, podemos derivar e obter
+a matriz de proximidades ou distâncias, na forma:
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 0\tabcolsep) * \real{0.0417}}@{}}
+\toprule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\(D = \begin{bmatrix}
+d_{11} & d_{21} & d_{31} & \ldots & d_{n1} \\
+d_{12} & d_{22} &  d_{32} & \ldots & d_{n2} \\
+d_{13} & d_{23} & d_{33}  & \ldots  & d_{n3} \\
+\vdots & \vdots & \vdots  & \ddots & \vdots \\
+d_{1n}& d_{2n} & d_{3n} &\ldots &  d_{nn}\\
+\end{bmatrix}_{n \times n}\) \\
+\end{longtable}
+
+\hypertarget{etapas-iniciais-da-clusterizauxe7uxe3o}{%
+\paragraph{Etapas iniciais da
+clusterização}\label{etapas-iniciais-da-clusterizauxe7uxe3o}}
+
+Habitualmente seguimos alguns critérios a priori para daí agrupar, sendo
+eles:
+
+--
+
+\begin{itemize}
+\item
+  A metodologia da clusterização, seleção de objetos, seleção de
+  variáveis, transformação de variáveis, seleção da medida de semelhança
+  ou dissemelhança, método de formação de clusters a aplicar, discussão
+  e apresentação dos resultados.
+\end{itemize}
+
+--
+
+Em relação ao tipo de transformação (QUINTAL, 2005) menciona alguns
+tipos de transformação nos dados usamos sejam funções de transformação e
+funções de estandardização como podemos observar:
+
+--
+
+\begin{itemize}
+\item
+  \(Z_{ij} = \sqrt{X_{ij}}\), dados com variância alta e
+  consequentemente queremos estabilizar torando mais próxima de
+  distribuição normal;
+\end{itemize}
+
+--
+
+\begin{itemize}
+\item
+  \(Z_{ij} = \log{X_{ij}}\), temos o comportamento da variação de forma
+  exponencial, podemos linearizar relações exponencias, assim como
+  controlar a variância e aproximar de uma distribuição normal;
+\end{itemize}
+
+--
+
+\begin{itemize}
+\item
+  \(Z_{ij} = \frac{X_{ij}-\bar{X_j}}{S_j}\), se faz útil quando queremos
+  eliminar a influência de variáveis em outras escalas de valores;
+\end{itemize}
+
+--
+
+\begin{itemize}
+\item
+  \(Z_{ij} = \frac{X_{ij}-Rmin_j}{Rmáx_j-Rmín_j}\) os valores podem
+  variar em -1 a 1, assim como a média e o valor do desvio padrão podem
+  variar diferentemente da aplicação da fórmula de padronização z-score.
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\#\#\#\#Medidas de (des)semelhanças
+
+Uma forma de mensurar o grau de parentesco entre dois objetos, ou que
+quantifique o quanto eles estão próximos ou afastados. Esta medida,
+segundo (BUSSAD et al., 1990) será chamada de coeficiente de parecença.
+
+--
+
+\begin{itemize}
+\item
+  \({d_{ij} = \left [\sum_{k = 1}^{p}(X_{ik}-X_{jk})^2 \right ]^{1/2}}\),
+  a considerada a métrica a mais elementar dentre todas as outras
+  medidas de distância, mede diretamente de um ponto ao outro os
+  elementos;
+\end{itemize}
+
+--
+
+\begin{itemize}
+\item
+  \(e_{ij} = \left [ \sum_{k = 1}^{p}\frac{(X_{ik}-X_{jk})^2}{n} \right ]^{1/2}\),
+  indicada por \(e_{pq}\) , tem como principal vantagem a falta de
+  valores na matriz multivariada;
+\end{itemize}
+
+--
+
+\begin{itemize}
+\item
+  \(d_{ij} = \sum_{k=1}^{p}\frac{|X_{ik}-X_{jk}|}{|X_{ik}|+|X_{jk}|}\),
+  se faz útil quando contemos outliers na distribuição (TIMM,
+  2002).Também utilizada em casos em que temos valores próximos de zero
+  entre os elementos;
+\end{itemize}
+
+--
+
+\begin{itemize}
+\item
+  \(d_{rs}^2 = (X_r- X_s)^TS^{-1}(X_r - X_s)\), pode fornecer redução da
+  dependência das unidades de medição, além ser uma escolha viável em
+  dados com alta correlação;
+\end{itemize}
+
+--
+
+\begin{itemize}
+\item
+  \(d_{ij} = \sum_{k = 1}^{p} \left | X_{ik}-X_{jk} \right |\),
+  evidencia que os valores atípicos são consideravelmente menos afetados
+  por valores do extremo da distribuição.
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+Antes de tudo, quando nos interessamos em calcular qualquer semelhança
+entre dois elementos, devemos ter em mente que estamos trabalhando com
+variáveis do tipo categóricas, nominais e ordinais, inicialmente vamos
+particionar os K níveis/categorias das mesmas em (K-1) classes de
+variáveis binárias as quais só podem assumir valores 0 e 1, sendo 0 a
+falta de um determinada característica de interesse e 1 a presença.
+
+--
+
+\begin{tabular}{ l r r r }
+  \hline & \multicolumn{3}{c}{Notas}\\
+  \cline{2 - 4} % linha horizontal entre as colunas
+% 2 e 4
+  \multirow[c]{-2}{*}{Nome} & Prova 1 & Prova 2 & Média\\
+  \hline
+João Silva & 5{,}0 & 6{,}0 & 5{,}5\\
+Maria Oliveira & 7{,}0 & 6{,}0 & 6{,}5\\
+Isabela Medeiros & 8{,}6 & 9{,}4 & 9{,}0\\
+  \hline
+\end{tabular}
+
+\hypertarget{section}{%
+\subsection{--}\label{section}}
+
+\begin{figure}
+
+{\centering \includegraphics{slide-pibic_files/figure-latex/unnamed-chunk-1-1} 
+
+}
+
+\caption{Figura 1: Gráfico de barra, números e percentuais de mortalidade}\label{fig:unnamed-chunk-1}
+\end{figure}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\begin{figure}
+
+{\centering \includegraphics{slide-pibic_files/figure-latex/unnamed-chunk-2-1} 
+
+}
+
+\caption{Figura 2: Gráfico de barra, números e percentuais de imunização}\label{fig:unnamed-chunk-2}
+\end{figure}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\begin{figure}
+
+{\centering \includegraphics{slide-pibic_files/figure-latex/unnamed-chunk-3-1} 
+
+}
+
+\caption{Figura 3: Diagrama de caixa, distribuição da variável óbitos}\label{fig:unnamed-chunk-3}
+\end{figure}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\begin{figure}
+
+{\centering \includegraphics{slide-pibic_files/figure-latex/unnamed-chunk-4-1} 
+
+}
+
+\caption{Figura 4: Diagrama de caixa, distribuição da variável Imunização}\label{fig:unnamed-chunk-4}
+\end{figure}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\begin{figure}
+
+{\centering \includegraphics{slide-pibic_files/figure-latex/unnamed-chunk-5-1} 
+
+}
+
+\caption{Figura 5: Histogramas, visualização das densidades}\label{fig:unnamed-chunk-5}
+\end{figure}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\begin{figure}
+
+{\centering \includegraphics{slide-pibic_files/figure-latex/unnamed-chunk-6-1} 
+
+}
+
+\caption{Figura 6:Método do coeficiente silhueta médio}\label{fig:unnamed-chunk-6}
+\end{figure}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\begin{figure}
+
+{\centering \includegraphics{slide-pibic_files/figure-latex/unnamed-chunk-7-1} 
+
+}
+
+\caption{Figura 7: Método do cotovelo}\label{fig:unnamed-chunk-7}
+\end{figure}
+
+\end{document}

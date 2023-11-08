@@ -1,0 +1,463 @@
+---
+institute: "UNIVERSIDADE ESTADUAL DA PARAÍBA CAMPUS l CENTRO DE CIÊNCIAS E TECNOLOGIA DEPARTAMENTO DE ESTATÍSTICA CURSO DE ESTATÍSTICA"
+title: "COMPARAÇÃO DAS TÉCNICAS DE AGRUPAMENTO:" 
+subtitle: "ESTUDO DE CASO EM DADOS DE VACINAÇÃO E MORTALIDADE INFANTIL ENTRE OS ANOS DE 2011 A  2021."
+author: "Fabiano F. dos Santos" 
+advisor: "Orientador :Prof. Dr. Márcio Augusto de Albuquerque " 
+date: "CAMPINA GRANDE DD/MM/AA"
+encoding: "UTF-8"
+header-includes:
+    - \renewcommand{\rmdefault}{bch}
+    - \usepackage{tikz}
+    - \usetikzlibrary{positioning}
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightLines: true
+      countIncrementalSlides: false
+   # css: ["rutgers", "rutgers-fonts"]
+editor_options: 
+  chunk_output_type: console
+---
+ 
+```{r setup, include = FALSE}
+knitr::opts_chunk$set()
+```
+
+### INTRODUÇÂO 
+
+####ÁNALISE DE AGRUPAMENTOS
+
+--
+ 
+- ML (Machine Learning) é um subcampo da inteligência artificial (IA) que se concentra no desenvolvimento de algoritmos e modelos computacionais;
+
+--
+ 
+ -  Deep learning com subárea de ML onde se faz uso de redes neurais artificiais com múltiplas camadas com o intuito de aprender cada vez mais dados cada vez mais complexos e contexto do trabalho em questão se faz uso das técnicas de aprendizado não supervisionado onde apenas especificamos o que se feito automaticamente independentemente do programa.
+
+--
+
+- Entre as estratégias de ML temos três tipos de aprendizados, incluindo aprendizado supervisionado, aprendizado não supervisionado e aprendizado por reforço;
+ 
+--
+
+- No contexto do trabalho em questão se faz uso das técnicas de aprendizado não supervisionado onde apenas especificamos o que se feito automaticamente independentemente do programa.
+
+
+---
+
+###MOTIVAÇÕES
+
+--
+
+<div style='text-align: justify; text-indent: 20px'>  Recordamos que a necessidade de agrupar é algo intuitivo e inerente ao ser humano se levarmos em consideração que para sobreviver e compreender os fenômenos precisamos <strong>ordenar os objetos segundo algum critério e posteriormente </strong> classificá-los.</div>
+
+--
+
+- <div style="text-align: justify;"> 
+Em áreas das ciências como a <strong>biologia</strong>, na antiguidade estudos sobre a taxonomia que dizem  respeito à classificação dos seres vivos, é importante enfatizar que um dos primeiros a sugerir um <strong>modelo taxonômico</strong> foi o filósofo grego Aristóteles (384-322 a.C.);
+
+</div>
+
+--
+
+- <div style="text-align: justify;">
+Podemos citar casos da vida cotidiana, por exemplo, quando uma criança na escola ao receber um conjunto de lápis para pintar um desenho, <strong>seleciona as principais cores</strong> de seu gosto, para daí começar a pintar; 
+
+</div>
+
+--
+
+- <div style="text-align: justify;"> Por exemplo, quando um assistente administrativo de uma empresa está organizando <strong>documentos em determinado setor</strong>, é normalmente utilizado sistemas computacionais onde determinadas pastas se localizam separadas e listadas pelos nomes para otimizar o tempo e organização. 
+
+</div>
+
+---
+
+### Objetivos
+
+--
+
+- Objetivo Geral:
+
+--
+
+ - Análise, discussão e comparação acerca das técnicas de clusterização hirárquicas e não hierárquicas. 
+
+--
+
+- Objetivos Específicos:
+
+--
+
+ - tipos de conversões de variáveis da matriz de dados; 
+
+--
+
+ - as medidas, sendo essas de similaridade ou dissimilaridade;
+
+--
+
+ - Abordar as principais técnicas de agrupamentos hierárquicas e não-hierárquicas; 
+
+--
+
+ - Escolha do número ideal de K partições e posteriores requisitos da qualidade do agrupamento.
+
+--
+
+ - análise exploratória dos dados;
+seleção de variáveis;
+
+--
+
+ - interpretações posteriores dos resultados.
+
+--
+
+---
+
+###REVISÃO BIBLIOGRÁFICA 
+####MATRIZ ORIGINAL E PROXIMIDADE
+--
+
+<p style="text-align: justify; text-indent: 20px"> Devemos destacar os agrupamentos dos quais partirmos da matriz multivariada expressa na forma:</p> 
+
+--
+
+$$X = \begin{bmatrix}
+X_{11} & X_{12} & \ldots & X_{1j} \\
+X_{21} & X_{22} & \ldots & X_{2j} \\
+\vdots & \vdots & \ddots & \vdots \\
+X_{i1} & X_{i2} & \ldots & X_{ij} \\
+\end{bmatrix}_{n \times p},$$
+
+<div style="text-align: justify;"> conhecida como <strong>matriz multivariada/original</strong>, possui dimensão \({n \times p}\), onde \(n\) é o número de observações e \(p\) é número de variáveis, lembramos que  \(i = 1, \ldots , n\) e \(j = 1 , \ldots , p.\) </div>
+
+--
+
+<div style="text-align: justify; text-indent: 20px;" > As variáveis podem ser <strong>categóricas</strong> ou <strong>métricas</strong>, podemos derivar e obter a matriz de <strong>proximidades</strong> ou <strong>distâncias</strong>, na forma: </div>
+
+--
+$$D = \begin{bmatrix}
+d_{11} & d_{21} & d_{31} & \ldots & d_{n1} \\
+d_{12} & d_{22} &  d_{32} & \ldots & d_{n2} \\
+d_{13} & d_{23} & d_{33}  & \ldots  & d_{n3} \\
+\vdots & \vdots & \vdots  & \ddots & \vdots \\
+d_{1n}& d_{2n} & d_{3n} &\ldots &  d_{nn}\\
+\end{bmatrix}_{n \times n}$$
+
+---
+
+#### Etapas iniciais da clusterização
+
+<div style="text-align: justify; text-indent: 20px;"> Habitualmente seguimos alguns critérios a priori para daí agrupar, sendo eles:</div>
+
+--
+
+- <div style="text-align: justify;"> A metodologia da clusterização, seleção de objetos, seleção de variáveis, transformação de variáveis, seleção da medida de semelhança ou dissemelhança, método de formação de clusters a aplicar, discussão e apresentação dos resultados. </div>
+
+--
+
+<div style="text-align: justify; text-indent: 20px;"> Em relação ao tipo de transformação (QUINTAL, 2005) menciona alguns tipos de transformação nos dados usamos sejam <strong>funções de transformação e funções de estandardização</strong> como podemos observar: </div>
+
+--
+
+- <div style="text-align: justify;"> \(Z_{ij} = \sqrt{X_{ij}}\), dados com variância alta e consequentemente queremos estabilizar torando mais próxima de distribuição normal; </div>
+
+--
+
+- <div style="text-align: justify;"> \(Z_{ij} = \log{X_{ij}}\), temos o comportamento da variação de forma exponencial, podemos linearizar relações exponencias, assim como controlar a variância e aproximar de uma distribuição normal; </div>
+
+--
+
+- <div style="text-align: justify;"> \(Z_{ij} = \frac{X_{ij}-\bar{X_j}}{S_j}\), se faz útil quando queremos eliminar a influência de variáveis em outras escalas de valores; </div>
+
+--
+
+- <div style="text-align: justify;"> \(Z_{ij} = \frac{X_{ij}-Rmin_j}{Rmáx_j-Rmín_j}\) os valores podem variar em -1 a 1, assim como a média e o valor do desvio padrão podem variar diferentemente da aplicação da fórmula de padronização z-score. </div>
+
+---
+
+####Medidas de (des)semelhanças 
+
+<div style="text-align: justify;text-indent: 20px;"> Uma forma de mensurar o grau de parentesco entre dois objetos, ou que quantifique o quanto eles estão próximos ou afastados. Esta medida, segundo (BUSSAD et al., 1990) será chamada de coeficiente de parecença. </div>
+
+
+--
+
+
+- <div style="text-align: justify;"> \({d_{ij} =  \left [\sum_{k = 1}^{p}(X_{ik}-X_{jk})^2 \right ]^{1/2}}\), a distância euclidiana é considerada a métrica mais elementar dentre todas as outras medidas de distância, essa métrica <strong>mede diretamente de um ponto ao outro os elementos</strong>; </div>
+
+
+--
+
+
+- <div style="text-align: justify;">  \(e_{ij} =  \left [ \sum_{k = 1}^{p}\frac{(X_{ik}-X_{jk})^2}{n}  \right ]^{1/2}\),  métrica euclidiana média indicada por \(e_{pq}\) , tem como principal vantagem a <strong>falta de valores na matriz multivariada</strong>; </div>
+
+
+--
+
+
+- <div style="text-align: justify;"> \( d_{ij} = \sum_{k=1}^{p}\frac{|X_{ik}-X_{jk}|}{|X_{ik}|+|X_{jk}|} \), se faz útil quando contemos <strong>outliers</strong> na distribuição (TIMM, 2002). Utilizada em casos em que temos valores próximos de zero entre os elementos. 
+; </div>
+
+
+--
+
+
+- <div style="text-align: justify;"> \(d_{rs}^2 = (X_r- X_s)^TS^{-1}(X_r - X_s)\), pode fornecer redução da dependência das <strong>unidades de medição</strong>, além ser uma escolha viável acerca de dados com <strong>alta correlação</strong>;</div>
+
+
+--
+
+- <div style="text-align: justify;"> \(d_{ij} = \sum_{k = 1}^{p} \left | X_{ik}-X_{jk} \right |\), evidencia que os valores atípicos são consideravelmente <strong>menos afetados por valores do extremo da distribuição</strong>, se comparada a métrica euclidiana. </div>
+
+---
+
+```{r echo=FALSE, message=FALSE, results="hide", fig.align="center", fig.cap= "Figura 1: Gráfico de barra, números e percentuais de mortalidade" , fig.dim = c(13.7, 11)}
+library(pacman)
+pacman::p_load(
+tidyverse,
+factoextra,
+corrplot,
+gridExtra,
+knitr,
+ggplot2, 
+readxl,
+grDevices
+)
+
+#mortalidade infantil de (faixa Etária: 1 ano a 30 dias de vida) regiões e estados
+estados <- read_excel("C:/Users/fabiano/Downloads/dados/dados mortalidade infantil-brasil-regiões-nordeste/estados/estados.xlsx")
+regioes <- read_excel("C:/Users/fabiano/Downloads/dados/dados mortalidade infantil-brasil-regiões-nordeste/regioes/regiões.xls")
+
+color1 = colorRampPalette(c("red","blue"))
+color2 = colorRampPalette(c("red","blue"))
+valor1 = color1(5)
+valor2 = color2(27)
+#obter a ordenação do total
+idx <- order(regioes$Total, decreasing = TRUE)
+# criar os níveis ordenados
+levels <- regioes$Região[idx]
+# criar um factor com níveis ordenados
+regioes$Região <- factor(regioes$Região, levels=levels, ordered=TRUE)
+
+
+plot1 = ggplot(regioes) +
+  aes(x = Região, y = Total, fill = Região )+
+  xlab("") + ylab("Número de mortes")+
+  geom_col(alpha = 0.9, width = 0.70 ) +
+  geom_text(aes(label = Percwntual), vjust = -0.1, size = 6) +
+  scale_x_discrete(labels = c("SUL", "SUDESTE","NORTE", "NORDESTE", "CENTRO-OESTE"))+
+  scale_y_continuous(limits = c(0,60000), breaks = seq(0,60000, 6000)) +
+  labs(title = "Orbitos infantis (28 dias até 1 ano de vida) ", subtitle = "Gráficos de Barra") +
+  theme(legend.position = "nome") + scale_fill_manual(values = valor1) +
+  geom_hline(yintercept = mean(regioes$Total), color = "black", linetype = "dashed")
+
+#obter a ordenação do total
+idx <- order(estados$total, decreasing = TRUE)
+idx
+#criar os níveis ordenados
+levels <- estados$estados[idx]
+#criar um factor com níveis ordenados
+estados$estados <- factor(estados$estados, levels=levels, ordered=TRUE)
+estados$estados
+
+plot2 = ggplot(estados) +
+  aes(x = estados, y = total, fill = estados )+
+  xlab("Mortalidade no Brasil (Regiões e Estados: 2011-2021)") + ylab("Número de mortes")+
+  geom_col(alpha = 0.9, width = 0.70) +
+  geom_text(aes(label = percentual, angle = 14), hjust = -0.04, vjust = -0.08, size = 5) +
+  scale_y_continuous(limits = c(0,23000), breaks = seq(0,23000, 2300)) +
+  theme(legend.position = "nome") + scale_fill_manual(values = valor2) + geom_hline(yintercept = mean(estados$total), color = "black", linetype = "dashed")
+
+graficos_combinados <- grid.arrange(plot1, plot2)
+
+```
+
+---
+
+```{r echo=FALSE, message=FALSE, results="hide", fig.align="center", fig.cap= "Figura 2: Gráfico de barra, números e percentuais de imunização" , fig.dim = c(13.7, 11)}
+
+library(pacman)
+pacman::p_load(
+tidyverse,
+factoextra,
+corrplot,
+gridExtra,
+knitr,
+ggplot2, 
+readxl,
+grDevices
+)
+
+#imunizações infantil de (faixa Etária: 1 ano a 30 dias de vida) regiões e estados
+estados <- read_excel("C:/Users/fabiano/Downloads/dados/dados imunização infantil  brasil-regiões-nordeste/estados/estados.xlsx")
+regioes <- read_excel("C:/Users/fabiano/Downloads/dados/dados imunização infantil  brasil-regiões-nordeste/regioes/R.xlsx")
+
+color1 = colorRampPalette(c("green","red"))
+color2 = colorRampPalette(c("green","red"))
+valor1 = color1(5)
+valor2 = color2(27)
+#obter a ordenação do total
+idx <- order(regioes$total, decreasing = TRUE)
+idx
+#criar os níveis ordenados
+levels <- regioes$Região[idx]
+#criar um factor com níveis ordenados
+regioes$Região <- factor(regioes$Região, levels=levels, ordered=TRUE)
+
+plot1 = ggplot(regioes)+
+  aes(x = Região, y = total, fill = Região )+
+  xlab("") + ylab("Número de Imunizados")+
+  geom_col(alpha = 0.9, width = 0.70 ) +
+  geom_text(aes(label = percentual), vjust = -0.1, size = 6) +
+  scale_y_continuous(limits = c(0,870000), breaks = seq(0,870000,87000)) +
+  scale_x_discrete(labels = c("SUL", "SUDESTE","NORTE", "NORDESTE", "CENTRO-OESTE"))+
+  labs(title = "Imunização infantil (28 dias até 1 ano de vida) ", subtitle = "Gráfico de Barra") +
+  theme(legend.position = "nome") + scale_fill_manual(values = valor1) +
+  geom_hline(yintercept = mean(regioes$total), color = "black", linetype = "dashed")
+
+#obter a ordenação do total
+idx <- order(estados$total, decreasing = TRUE)
+idx
+#criar os níveis ordenados
+levels <- estados$estados[idx]
+# criar um factor com níveis ordenados
+estados$estados <- factor(estados$estados, levels=levels, ordered=TRUE)
+estados$estados
+
+plot2 = ggplot(estados) +
+  aes(x = estados, y = total, fill = estados )+
+  xlab("Imunização no Brasil (Regiões e Estados: 2011-2021)") +
+  ylab("Número de Imunizados")+
+  geom_col(alpha = 1, width = 0.70) +
+  geom_text(aes(label = percentual,  angle = 14), hjust = -0.04, vjust = -0.08, size = 5)+
+  scale_y_continuous(limits = c(0,600000), breaks = seq(0,600000,60000))+
+  theme(legend.position = "nome")+ scale_fill_manual(values = valor2) +
+  geom_hline(yintercept = mean(estados$total), color = "black", linetype = "dashed")
+
+graficos_combinados2 = grid.arrange(plot1,plot2)
+
+```
+---
+
+```{r, echo=FALSE, message=FALSE, results="hide", fig.align="center", fig.cap= "Figura 3: Diagrama de caixa, distribuição da variável óbitos" , fig.dim = c(13.7, 11)}
+
+library(pacman)
+pacman::p_load(
+tidyverse,
+factoextra,
+corrplot,
+gridExtra,
+knitr,
+ggplot2, 
+readxl,
+grDevices
+)
+
+dendogramo_dados_ <- endogramo_dados_ <- read_excel("C:/Users/fabiano/Downloads/dados/dados em forma não resumida/dendogramo (dados).xlsx")
+
+plot1 = ggplot(dendogramo_dados_) +
+  aes(x = REGIÃO, y = doses_aplicadas_ , colour  = REGIÃO)+
+  xlab("Regiões")+ ylab("Número de Imuizações")+
+  geom_boxplot(width = 0.8, alpha = 0.5) +
+  scale_y_continuous(limits = c(0,600000), breaks = seq(0,600000,120000))+
+  geom_jitter(position = position_jitter(0.2),shape = 19, col ="red")+
+  scale_x_discrete(labels = c("CENTRO-OESTE", "NORDESTE","NORTE", "SUDESTE", "SUL"))+
+  labs(title = "Distribuição de imunizações por Região") +
+  theme(legend.position = "nome") #+ scale_fill_manual(values = valor1)
+plot1
+
+```
+---
+
+```{r, echo=FALSE, message=FALSE, results="hide", fig.align="center", fig.cap= "Figura 4: Diagrama de caixa, distribuição da variável Imunização" , fig.dim = c(13.7, 11)}
+
+library(pacman)
+pacman::p_load(
+tidyverse,
+factoextra,
+corrplot,
+gridExtra,
+knitr,
+ggplot2, 
+readxl,
+grDevices
+)
+
+plot2 = ggplot(dendogramo_dados_) +
+  aes(x = REGIÃO, y = obitos_infantis_ , colour = REGIÃO)+
+  xlab("Regiões")+ ylab("Número de Orbitos infantis")+
+  geom_boxplot(width = 0.8, alpha = 0.5) +
+  geom_jitter(position = position_jitter(0.2),  shape = 19, col ="red")+
+  scale_y_continuous(limits = c(0,80000), breaks = seq(0,80000,16000))+
+  scale_x_discrete(labels = c("CENTRO-OESTE", "NORDESTE","NORTE", "SUDESTE", "SUL"))+
+  labs(title = "Distribuição de Orbitos infantis por Região") +
+  theme(legend.position = "nome") 
+plot2
+
+```
+---
+
+
+```{r, echo=FALSE, message=FALSE, results="hide", fig.align="center", fig.cap= "Figura 5: Histogramas, visualização das densidades" , fig.dim = c(13.7, 11)}
+
+quebras = pretty(range(dendogramo_dados_$doses_aplicadas_),
+                 n = nclass.Sturges(dendogramo_dados_$doses_aplicadas_))
+
+plot1 = ggplot(dendogramo_dados_, aes(x = doses_aplicadas_/10000)) +
+  ylab("densidade")+ xlab("Doses aplicadas x(10000)") +
+  labs(title = "Histograma", subtitle = "") +  
+  geom_histogram(aes(y = after_stat(density)), fill ="#00FA9A", breaks = quebras/10000) +
+  geom_density(col = "red")+
+  scale_x_continuous(limits = c(0,60), breaks = seq(0,60,10))+
+  theme_bw()
+
+quebras = pretty(range(dendogramo_dados_$obitos_infantis_),
+                 n = nclass.Sturges(dendogramo_dados_$obitos_infantis_))
+
+plot2 = ggplot(dendogramo_dados_, aes(x = obitos_infantis_/1000)) +
+  ylab("densidade")+ xlab("Obitos infantis x(1000)") +
+  labs(title = "", subtitle = "") +  
+  geom_histogram(aes(y = after_stat(density)), fill ="#00FA9A", breaks = quebras/1000) +
+  geom_density(col = "red")+
+  scale_x_continuous(limits = c(0,70), breaks = seq(0,70,10))+
+  theme_bw()
+
+graficos_combinados <- grid.arrange(plot1, plot2, ncol = 2)
+
+```
+---
+
+```{r, echo=FALSE, message=FALSE, results="hide", fig.align="center", fig.cap= "Figura 6:Método do coeficiente silhueta médio" , fig.dim = c(13.7, 11)}
+
+dendogramo_dados_1 = data.frame(dendogramo_dados_[,c(1,3,4)], row.names = 1)
+dendogramo_dados_1. = scale(dendogramo_dados_1)
+
+#método do cotovelo
+fviz_nbclust(dendogramo_dados_1., kmeans,k.max = 26, method = "wss") +
+  theme_bw() + ylab("total de som a de quadrados")+ xlab("Números de clusters")+
+  labs(title = "")
+```
+
+---
+```{r, echo=FALSE, message=FALSE, results="hide", fig.align="center", fig.cap= "Figura 7: Método do cotovelo" , fig.dim = c(13.7, 11)}
+
+dendogramo_dados_1 = data.frame(dendogramo_dados_[,c(1,3,4)], row.names = 1)
+dendogramo_dados_1. = scale(dendogramo_dados_1)
+
+#método da silhueta
+fviz_nbclust(dendogramo_dados_1., hcut, k.max = 26, nstart = 100, method = "silhouette" ) +
+ theme_bw() + ylab("CSM") + xlab("Números de clusters")+
+ labs(title = "")
+
+```
+
+```{r, echo=FALSE, message=FALSE, results="hide", fig.align="center", fig.cap= "Figura 8: Dendrograma, normas de fusão simples" , fig.dim = c(13.7, 11)}
+
+
+```

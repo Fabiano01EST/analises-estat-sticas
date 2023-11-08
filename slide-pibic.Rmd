@@ -1,0 +1,1151 @@
+---
+title: "UNIVERSIDADE ESTADUAL DA PARAÍBA CAMPUS l CENTRO DE CIÊNCIAS E TECNOLOGIA DEPARTAMENTO DE ESTATÍSTICA CURSO DE ESTATÍSTICA"
+institute: 
+        - "COMPARAÇÃO DAS TÉCNICAS DE AGRUPAMENTO: ESTUDO DE CASO EM DADOS DE VACINAÇÃO E MORTALIDADE INFANTIL ENTRE OS ANOS DE 2011 A  2021."
+author: 
+     - "Fabiano Florentino dos Santos" 
+     - "Orientador: Prof. Dr. Márcio Augusto de Albuquerque "
+date: "CAMPINA GRANDE 06/11/23"
+encoding: "UTF-8"
+header-includes:
+    - \renewcommand{\rmdefault}{bch}
+    - \usepackage{tikz}
+    - \usepackage{multicolumn}
+    - \usetikzlibrary{positioning}
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightLines: true #realçar as linhas
+      countIncrementalSlides: false
+  #  css: ["rutgers", "rutgers-fonts"]
+editor_options: 
+  chunk_output_type: console
+ 
+---
+```{r,echo=FALSE, message=FALSE, out.width="15%", out.height = "20%",  fig.align = 'left'}
+knitr::include_graphics("img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png")
+```
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set()
+```
+
+<!-- ### INTRODUÇÂO  -->
+
+<!-- ####ÁNALISE DE AGRUPAMENTOS -->
+
+<!-- -- -->
+
+<!-- - ML (Machine Learning) é um subcampo da inteligência artificial (IA) que se concentra no desenvolvimento de algoritmos e modelos computacionais; -->
+
+<!-- -- -->
+
+<!--  -  Deep learning com subárea de ML onde se faz uso de redes neurais artificiais com múltiplas camadas com o intuito de aprender cada vez mais dados cada vez mais complexos e contexto do trabalho em questão se faz uso das técnicas de aprendizado não supervisionado onde apenas especificamos o que se feito automaticamente independentemente do programa. -->
+
+<!-- -- -->
+
+<!-- - Entre as estratégias de ML temos três tipos de aprendizados, incluindo aprendizado supervisionado, aprendizado não supervisionado e aprendizado por reforço; -->
+
+<!-- -- -->
+
+<!-- - No contexto do trabalho em questão se faz uso das técnicas de aprendizado não supervisionado onde apenas especificamos o que se feito automaticamente independentemente do programa. -->
+
+
+####INTRODUÇÃO A ANÁLISE DE AGRUPAMENTOS
+#####MOTIVAÇÕES
+
+--
+
+<div style='text-align: justify; text-indent: 20px'>  Recordamos que a necessidade de agrupar é algo intuitivo e inerente ao ser humano de <strong>ordenar os objetos segundo algum critério e posteriormente classificá-los.</strong></div>
+
+--
+
+- <div style="text-align: justify;"> 
+Em áreas das ciências como a <strong>biologia</strong>, na antiguidade estudos sobre a taxonomia que dizem  respeito à classificação dos seres vivos, o <strong>modelo taxonômico</strong> proposto pelo filósofo grego Aristóteles (384-322 a.C.);
+
+</div>
+
+--
+
+- <div style="text-align: justify;">
+Podemos citar casos da vida cotidiana, por exemplo, quando uma criança na escola ao receber um <strong>conjunto de lápis para pintar um desenho, seleciona as principais cores</strong> de seu gosto, para daí começar a pintar; 
+
+</div>
+
+--
+
+- <div style="text-align: justify;"> outro exemplo, um <strong>assistente administrativo de uma empresa está organizando documentos em determinado setor</strong>, é normalmente utilizado sistemas computacionais onde determinadas pastas se localizam separadas e listadas pelos nomes para otimizar o tempo e organização. 
+
+</div>
+
+---
+```{r,echo=FALSE, message=FALSE, out.width="15%", out.height = "20%",  fig.align = 'left'}
+knitr::include_graphics("img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png")
+```
+### Objetivos
+
+--
+
+- Objetivo Geral:
+
+--
+
+ - Análise, discussão e comparação acerca das técnicas de clusterização hirárquicas e não hierárquicas. 
+
+--
+
+- Objetivos Específicos:
+
+--
+
+ - tipos de conversões de variáveis da matriz de dados; 
+
+--
+
+ - as medidas, sendo essas de similaridade ou dissimilaridade;
+
+--
+
+ - Abordar as principais técnicas de agrupamentos hierárquicas e não-hierárquicas; 
+
+--
+
+ - Escolha do número ideal de K partições e posteriores requisitos da qualidade do agrupamento.
+
+--
+
+ - análise exploratória dos dados;
+seleção de variáveis;
+
+--
+
+ - interpretações posteriores dos resultados.
+
+--
+
+---
+```{r,echo=FALSE, message=FALSE, out.width="15%", out.height = "20%",  fig.align = 'left'}
+knitr::include_graphics("img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png")
+```
+###REVISÃO BIBLIOGRÁFICA 
+####MATRIZ ORIGINAL E PROXIMIDADE
+
+<p style="text-align: justify; text-indent: 20px"> Devemos destacar os agrupamentos dos quais partirmos da matriz multivariada expressa na forma:</p> 
+
+--
+
+$$X = \begin{bmatrix}
+X_{11} & X_{12} & \ldots & X_{1j} \\
+X_{21} & X_{22} & \ldots & X_{2j} \\
+\vdots & \vdots & \ddots & \vdots \\
+X_{i1} & X_{i2} & \ldots & X_{ij} \\
+\end{bmatrix}_{n \times p},$$
+
+<div style="text-align: justify;"> conhecida como <strong>matriz multivariada/original</strong>, possui dimensão \({n \times p}\), onde \(n\) é o número de observações e \(p\) é número de variáveis, lembramos que  \(i = 1, \ldots , n\) e \(j = 1 , \ldots , p.\) </div>
+
+---
+```{r,echo=FALSE, message=FALSE, out.width="15%", out.height = "20%",  fig.align = 'left'}
+knitr::include_graphics("img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png")
+```
+<div style="text-align: justify; text-indent: 20px;" > As variáveis podem ser <strong>categóricas</strong> ou <strong>métricas</strong>, podemos derivar e obter a matriz de <strong>proximidades</strong> ou <strong>distâncias</strong>, na forma: </div>
+
+--
+$$D = \begin{bmatrix}
+d_{11} & d_{21} & d_{31} & \ldots & d_{n1} \\
+d_{12} & d_{22} &  d_{32} & \ldots & d_{n2} \\
+d_{13} & d_{23} & d_{33}  & \ldots  & d_{n3} \\
+\vdots & \vdots & \vdots  & \ddots & \vdots \\
+d_{1n}& d_{2n} & d_{3n} &\ldots &  d_{nn}\\
+\end{bmatrix}_{n \times n}$$
+
+ou na forma:
+
+$$D = 
+\begin{bmatrix}
+d_{12} &  &  &  & \\
+d_{13} & d_{23} &  &  &  \\
+d_{14} & d_{24} & d_{34} & &  \\
+\vdots & \vdots & \vdots & \ddots &  \\
+d_{1n}& d_{2n} & d_{3n} &\ldots &  d_{nn}\\
+\end{bmatrix}_{(n-1) \times n}$$
+
+---
+```{r,echo=FALSE, message=FALSE, out.width="15%", out.height = "20%",  fig.align = 'left'}
+knitr::include_graphics("img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png")
+```
+
+#### Etapas iniciais da clusterização
+
+<!-- <!-- <div style="text-align: justify; text-indent: 20px;"> Habitualmente seguimos alguns critérios a priori para daí agrupar, como seleção e tratamentos nas variáveis coletadas.</div> -->
+
+<!-- <!-- -- --> 
+
+<!-- <!-- - <div style="text-align: justify;"> A metodologia da clusterização, seleção de objetos, seleção de variáveis, transformação de variáveis, seleção da medida de semelhança ou dissemelhança, método de formação de clusters a aplicar, discussão e apresentação dos resultados. </div> --> 
+
+<!-- -- -->
+
+<!-- <div style="text-align: justify; text-indent: 20px;"> (QUINTAL, 2005), menciona alguns tipos de transformação nos dados usamos sejam <strong>funções de transformação e funções de estandardização</strong> como podemos observar: </div> -->
+
+
+<!-- -- -->
+
+
+<!-- - <div style="text-align: justify;"> \(Z_{ij} = \sqrt{X_{ij}}\), dados com variância alta e consequentemente queremos estabilizar torando mais próxima de distribuição normal; </div> -->
+
+
+<!-- -- -->
+
+
+<!-- - <div style="text-align: justify;"> \(Z_{ij} = \log{X_{ij}}\), temos o comportamento da variação de forma exponencial, podemos linearizar relações exponencias, assim como controlar a variância e aproximar de uma distribuição normal; </div> -->
+
+
+<!-- -- -->
+
+
+<!-- - <div style="text-align: justify;"> \(Z_{ij} = \frac{X_{ij}-\bar{X_j}}{S_j}\), se faz útil quando queremos eliminar a influência de variáveis em outras escalas de valores; </div> -->
+
+
+<!-- -- -->
+
+
+<!-- - <div style="text-align: justify;"> \(Z_{ij} = \frac{X_{ij}-Rmin_j}{Rmáx_j-Rmín_j}\), os valores podem variar em -1 a 1, assim como a média e o valor do desvio padrão podem variar diferentemente da aplicação da fórmula de padronização z-score. </div> -->
+
+
+####Principais medidas de distância
+
+<div style="text-align: justify;text-indent: 20px;"> Uma forma de mensurar o grau de parentesco entre dois objetos, ou que quantifique o quanto eles estão próximos ou afastados. Esta medida, segundo (BUSSAD et al., 1990) será chamada de coeficiente de parecença. </div>
+
+--
+
+- <div style="text-align: justify;"> \({d_{ij} =  \left [\sum_{k = 1}^{p}(X_{ik}-X_{jk})^2 \right ]^{1/2}}\), a distância Euclidiana considerada a métrica a mais elementar dentre todas as outras medidas de distância, <strong>mede diretamente de um ponto ao outro os elementos</strong>; </div>
+
+
+--
+
+
+- <div style="text-align: justify;">  \(e_{ij} =  \left [ \sum_{k = 1}^{p}\frac{(X_{ik}-X_{jk})^2}{n}  \right ]^{1/2}\), a distância Euclidiana Média indicada por \(e_{pq}\), tem como principal vantagem a <strong>falta de valores na matriz multivariada</strong>; </div>
+
+
+--
+
+
+- <div style="text-align: justify;"> \( d_{ij} = \sum_{k=1}^{p}\frac{|X_{ik}-X_{jk}|}{|X_{ik}|+|X_{jk}|} \), a distância Canberra se faz útil quando contemos <strong>outliers na distribuição</strong>.Também utilizada em casos em que temos valores próximos de zero entre os elementos; </div>
+
+
+---
+```{r,echo=FALSE, message=FALSE, out.width="15%", out.height = "20%",  fig.align = 'left'}
+knitr::include_graphics("img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png")
+```
+- <div style="text-align: justify;"> \(d_{rs}^2 = (X_r- X_s)^TS^{-1}(X_r - X_s)\), a distância de Mahalanobis pode fornecer redução da dependência das <strong>unidades de medição</strong>, além ser uma escolha viável em dados com <strong>alta correlação</strong>;</div>
+
+
+--
+
+
+- <div style="text-align: justify;"> \(d_{ij} = \sum_{k = 1}^{p} \left | X_{ik}-X_{jk} \right |\), a distância de Manhattan evidencia que os valores atípicos são consideravelmente <strong>menos afetados por valores do extremo da distribuição</strong>.</div>
+
+---
+<!-- <div style="text-align: justify;">Antes de tudo, quando nos interessamos em calcular qualquer <strong>semelhança entre dois elementos</strong>, devemos ter em mente que estamos trabalhando com variáveis do tipo <strong>categóricas, nominais e ordinais</strong>, inicialmente vamos <strong>particionar os K níveis/categorias das mesmas em (K-1) classes de variáveis binárias</strong> as quais só podem assumir valores 0 e 1, sendo 0 a falta de um determinada característica de interesse e 1 a presença.</div> -->
+
+<!-- -- -->
+
+<!-- <div style="text-align: center;"> Tabela 1: tabela de contigência/frequência </div> -->
+
+<!-- $$\begin{array}{ccc} -->
+<!-- \hline -->
+<!-- observação (p)/observação(q)& presença & ausência & total \\ -->
+<!-- \hline -->
+<!-- presença & a & b & a+b \\ -->
+<!-- ausência & c  & d & c+d \\ -->
+<!-- \hline -->
+<!-- total & a+b & b+c & n \\ -->
+<!-- \hline -->
+<!-- \end{array}$$ -->
+<!-- -- -->
+
+
+<!-- onde temos: -->
+
+
+<!-- -- -->
+
+
+<!-- - <div>Para \((a)\) , número de variáveis binárias em que há presença da característica nos objetos \((p)\) e \((q)\);</div> -->
+
+
+<!-- -- -->
+
+
+<!-- - <div>Para \((b)\) , número de variáveis binárias em que a observação \((p)\) possuir a característica e \((q)\) não possui;</div> -->
+
+
+<!-- -- -->
+
+
+<!-- - <div>Para \((c)\) , número de variáveis binárias em que a observação \((p)\) não possuir a característica e \((q)\) possui;</div> -->
+
+
+<!-- -- -->
+
+
+<!-- - <div>Para \((d)\) , número de variáveis binárias em que há ausência da característica nos objetos \((p)\) e \((q)\).</div> -->
+
+
+<!-- --- -->
+
+<!-- <div style="text-align: justify;text-indent: 20px;">Dentre os principais coeficientes de similaridade temos:</div> -->
+
+
+<!-- -- -->
+
+
+<!-- - <div style="text-align: justify;"> \(s_{pq} = \frac{a}{a+b+c}\), o coeficiente de Jaccard <strong>não considera a contagem de variáveis de ausência d</strong>. Isso implica que quando temos respostas (0-0) esse coeficiente não julga necessário essa informação, portanto quando vamos calcular a proporção dos pares é obtida por meio da exclusão de d; </div> -->
+
+
+<!-- -- -->
+
+
+<!-- - <div style="text-align: justify;"> \(s_{pq} = \frac{a+d}{a+b+c+d}\), o coeficiente de Ausência Conjunta por <strong>considerar d, nesse índice  consideramos todas as possibilidades da presença ou não dos atributos</strong>, existe uma ponderação, uma caso especial quando \(b + c = 0\), \(S_{pq} = 1\), a recíproca vale para \(a + d = 0\), por conseguinte \(S_{pq} = 0\); </div> -->
+
+
+<!-- -- -->
+
+
+<!-- - <div style="text-align: justify;">\(s_{pq} = \frac{a}{a+b+c+d}\), o coeficiente de  Concordâncias Positivas, se classifica como um coeficiente de ausência conjunta, sendo assim uma variação privilegiada. Essa medida <strong>leva em consideração a presença do atributo \(\textbf{(1-1)}\)</strong>, ou seja, \(a\) sobre o total de somas de todas as parcelas cujo qual varia num intervalo de \([0,1]\);</div> -->
+
+
+<!-- -- -->
+
+
+<!-- - <div style="text-align: justify;"> \(s_{pq} = \frac{2(a+d)}{2(a+d)+c+d}\), o coeficiente de Sneath e Sokal, <strong>apresenta o dobro de peso nas presenças e ausências das simultâneas das características</strong>, sendo usado em análise de estudos sobre Zoologia, Genética e varia num intervalo de [0,1] carrega a peculiaridade quando os pares de elementos apresentam valores em oposição serão julgados como elementos com pouca semelhança.</div> -->
+
+
+
+```{r,echo=FALSE, message=FALSE, out.width="15%", out.height = "20%",  fig.align = 'left'}
+knitr::include_graphics("img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png")
+```
+#####Clusterização Hierárquica
+
+<div style="text-align: justify; text-indent: 20px"> Para dar início ao algoritmos hierárquicos, temos os <strong>critérios aglomerativo e divisivo.</strong> Sendo o mais utilizado o meio aglomerativo. </div>
+
+
+--
+
+
+- <div style="text-align: justify;"> O primeiro passo após a obtenção da matriz simétrica \(D : [n \times n]\) de distâncias ou reduzida \([(n-1) \times n]\), vamos à procura da menor distância entre os elementos dentre os \(n\) coletados;</div>
+
+
+--
+
+
+- <div style="text-align: justify;"> Suponhamos que os objetos \(A\) e \(B\), possuem a menor dissimilaridade entre as demais, devemos atualizar \(D\), para \(D1\) onde aglutinamos os elementos, eliminando as colunas e linhas respectivas de objetos \(A\) e \(B\) criar exclusivamente para ambos uma linha e uma coluna;</div>
+
+
+--
+
+
+- <div style="text-align: justify;"> Por meio da norma de encadeamento escolhido calculamos as distâncias do recém enumerado grupo \(AB\) em relação aos demais;</div>
+
+
+--
+
+
+- <div style="text-align: justify;"> Repetimos o passo de atualizar a matriz \(D_1\),em \(D_2, D_3, \dots ,D_{N-2}, D_{N-1}\), até que não reste mais elementos para agrupar em \(D_{N-1}\), isso só ocorrerá depois de um total de \(N-1\) vezes, formando assim um único grupo com todos os objetos;</div>
+
+
+---
+```{r,echo=FALSE, message=FALSE, out.width="15%", out.height = "20%",  fig.align = 'left'}
+knitr::include_graphics("img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png")
+```
+
+- <div style="text-align: justify;"> Por último, por meio dos estágios de aglomeração e das distâncias dos agrupamentos, podemos construir um gráfico em formato de árvore conhecido como <strong>dendograma, fenograma, diagrama de árvore</strong>.</div>
+
+--
+
+
+```{r echo=FALSE, message=FALSE, results="hide", fig.align="center", fig.cap= "Figura 1: Exemplo de Dendograma", fig.dim = c(5, 5)}
+
+library(readxl)
+library(ggplot2)
+
+matriz_de_dados_ex <-  read_excel("C:/Nova pasta/OneDrive/Documentos/matriz de dados ex.xlsx")
+Y = data.frame(matriz_de_dados_ex, row.names = 1)
+
+G = dist(Y, method = "euclidian")
+as.matrix(G)
+G.hc1 = hclust(d = G, method = "single",)
+#rect.hclust(G.hc1, k = 3, border = 2:4)
+plot(G.hc1, main = "Dendograma", sub = "Ligação simples", ylab = "Distância Euclidiana")
+theme_set(theme_bw())
+```
+---
+```{r,echo=FALSE, message=FALSE, out.width="15%", out.height = "20%",  fig.align = 'left'}
+knitr::include_graphics("img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png")
+```
+
+Dentre os métodos de ligação entre grupos temos:
+
+--
+
+- <div style="text-align: justify;">\(d_{AB} = min \left\{d_{ij}: i \in A, j \in B \right\}  \), conhecido como encadeamento único ou vizinho mais próximo, <strong>a principal desvantagem onde eventualmente, ao surgir um considerável volume de observações</strong>, pode produzir clusters irregulares e desiguais.</div>
+
+
+--
+
+
+- <div style="text-align: justify;">\(d_{AB} = máx \left\{d_{ij}: i \in A, j \in B \right\} \), no encadeamento completo ou vizinho mais distante, dado o grupo recém-formados, grupos A  e B. Indo em oposição à metodologia anterior nesse tipo de ligação, tem a <strong>tendência de produzir clusters mais parecidos entre si</strong>.</div>
+
+
+--
+
+
+- <div style="text-align: justify;">\(d_{AB} = \frac{\sum_{p = 1}^{N_a}\sum_{q = 1}^{N_b}d_{pq}}{(N_a + N_b)}\), no método de eucadeamento médio, a junção dos clusters \(A\) e \(B\) tem como característica a variabilidade entre ambos que podem ser menores, <strong>temos conglomerados mais homogêneos, sendo uma escolha em casos de existência de valores atípicos</strong>.</div>
+
+
+---
+```{r,echo=FALSE, message=FALSE, out.width="15%", out.height = "20%",  fig.align = 'left'}
+knitr::include_graphics("img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png")
+```
+
+- <div style="text-align: justify;">\(d_{A,B} = d( \bar{x_A} , \bar{x_B})\), no método do centroide definimos a medida de um agrupamento A e B como sendo a  distância euclidiana entre os centroides. Definimos que \(\bar{X_A}\) e \(\bar{X_C}\) são as médias aritméticas dos grupos. Também possui insensibilidade quanto a possível <strong>existência de valores atípicos </strong> nos dados.</div>
+
+
+--
+
+
+- <div style="text-align: justify;"> o fato de A conter um número maior de elementos que B, isso implica que o centroide \(\bar{X}_{AB}\) poderá estar mais perto de \(\bar{X_A}\) do que \(\bar{X_B}\) e com isso implicaria <strong>uma ponderação a cada um dos centroides, para evitar que este fato ocorra podemos utlizar o método da mediana</strong>.</div>
+
+
+--
+
+
+- <div style="text-align: justify;"> no critério Ward, temos à alteração de soma de quadrados dos erros com base nela usamos como pressuposto para <strong>aglutinar novos grupos de forma que a haja um aumento mínimo no total da soma de quadrados dos erros</strong> ou a variabilidade seja mínima.</div>
+
+--
+
+Para o grupo A temos:
+ 
+$$ssw_A = {\sum_{i = 1}^{N_A}\sum_{j=1}^{p}( x_{ijA} - \bar{x}_{jA})^2}\cdot$$
+---
+```{r,echo=FALSE, message=FALSE, out.width="15%", out.height = "20%",  fig.align = 'left'}
+knitr::include_graphics("img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png")
+```
+Para o grupo B temos:
+$$ssw_B = {\sum_{i = 1}^{N_B}\sum_{j=1}^{p}( x_{ijB} - \bar{x}_{jB})^2}\cdot$$
+
+
+<div style="text-align: justify;"> Por conseguinte, o recém-formado grupo \(C\), calculamos o \(ssw_C\), fazendo a diferença \(ssw_C-(ssw_A+ssw_B)\), é com base nessa quantidade vamos unir os elementos tal forma que essa diferença seja mínima possível.</div>
+
+---
+```{r,echo=FALSE, message=FALSE, out.width="15%", out.height = "20%",  fig.align = 'left'}
+knitr::include_graphics("img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png")
+```
+#####Clusterização Não Hierárquica
+
+<div style="text-align: justify;"> Dentre os métodos de particionamentos ou de optimização temos K-means ou K-médias e versões alternativas, precisamos do número inicial de \(K\) grupos em contraposição a metodologia hierárquica.</div>
+
+
+--
+
+
+ - <div style="text-align: justify;">Selecionamos uma quantidade \(n\)-elementos em \(K\)-grupos arbitrários. (normalmente considera-se as sementes ou \(K\)-centroides com a média dos grupos)</div>
+
+
+--
+
+
+ - <div style="text-align: justify;"> Calculamos os centroides e alocamos uma dada observação com base na distância euclidiana, seja ela menor em relação a algum centroide vizinho realocação imediata, caso contrário, optamos pela permanência do elemento. </div>
+
+
+--
+
+
+ - <div style="text-align: justify;"> Repetirmos o passo de forma que não reste mais elementos que não possam ser mais trocados entre si, lembrando o fato que a forma de obtenção do centroide depende diretamente se houve ou não troca de elementos, ou seja, temos cálculos que se diferem por conta disso. </div>
+ 
+---
+```{r,echo=FALSE, message=FALSE, out.width="15%", out.height = "20%",  fig.align = 'left'}
+knitr::include_graphics("img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png")
+```
+<div style="text-align: justify;"> Lembramos que o vetor médio do cluster que ganha ou perde uma observação para seu vizinho é dada pela fórmula: </div>
+
+$$\bar{x} = \frac{N \bar{x} \pm x_p}{N\pm1}$$
+<div style="text-align: justify;"> Uma forma de interpretar as devidas partições formadas, é por meio das medidas descritivas, tanto média com valor representativo com desvio padrão para medir o grau de dispersão das unidades envolvidas. </div>
+
+---
+```{r,echo=FALSE, message=FALSE, out.width="15%", out.height = "20%",  fig.align = 'left'}
+knitr::include_graphics("img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png")
+```
+####Determinação do número de grupos ideal e validação
+
+
+<!-- <div style="text-align: justify; text-indent: 20px"> Nem sempre é viável a escolha da quantidade de grupos iniciais de forma subjetiva, estratégias metodológicas convenientes para se chegar a essa quantidade ideal e avaliar o agrupamento posterior, como veremos na técnicas hierárquicas e não hierárquicas.</div> -->
+
+
+Dentre as técnicas temos as mais usadas:
+
+--
+
+ 
+ - método do cotovelo;
+ - método da Silhueta;
+ - método da correlação cofenética (agrupamentos hierárquicos);
+<!-- método de Rand e Rand ajustado. -->
+
+--
+
+#####método do cotovelo
+
+<div style="text-align: justify; text-indent: 20px"> Aqui vamos considerar agrupamentos com diferentes números de K, onde podemos visualizar ao decorrer que aumentamos o número de K diminuímos consequentemente os valores dos erros quadráticos dos grupos. <strong>A melhor partição é justamente onde o gráfico tem um formato de cotovelo, ou seja, onde teve maior um decréscimo considerável a soma erros quadráticos total</strong>.</div>
+---
+```{r echo=FALSE, message=FALSE, results="hide", fig.align="center", fig.cap= "Figura 2: método do cotovelo, exemplo gráfico" , fig.dim = c(13.7, 11)}
+
+library(factoextra)
+
+fviz_nbclust(Y, kmeans,k.max = 4, method = "wss") +
+theme_bw() + ylab("Total de soma de quadrados internos") + xlab("Números de clusters")+ geom_vline(xintercept = 2, color = "blue", linetype = "dashed")+labs(title = "")+theme_get()
+
+```
+---
+```{r,echo=FALSE, message=FALSE, out.width="15%", out.height = "20%",  fig.align = 'left'}
+knitr::include_graphics("img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png")
+```
+#####método do silhueta
+
+<div style="text-align: justify; text-indent: 20px"> Outra forma de ir encontro ao valor ideal de <em>K</em> é analisar a Silhueta que apresenta também a ideia de expressar essa quantidade ideal. Essa medida que <strong>expressa o quanto que um determinado objeto qualquer é similar a seu grupo </strong>, de maneira geral é expresso na forma:</div>
+
+
+--
+
+
+- <div style="text-align: justify; text-indent: 20px"> \(s(i) = \frac{b(i)-a(i)}{max(a(i);b(i))}\), o coeficiente de silhueta varia de numa escala de \([-1,1]\) indicando a divisão de boa qualidade quando \(s(i)\) tende ao valor 1;</div>
+
+
+--
+
+
+ - <div style="text-align: justify;"> \(a(i) = \sum_{j \in C_l}\frac{d_{ij}}{n_l}\),  \(a(i)\) é a dessemelhança média de cada valor \(i\) pertencente ao grupo \(A\);</div>
+
+
+--
+
+
+ - <div style="text-align: justify;"> \(b(i) = min_{i \neq C_k}[d_{iC_{k}}]\),  \(b(i)\), acaba sendo a dissimilaridade média de \(i\) em relação a unidades pertencentes aos grupos  \(C_k\), sendo \(C_k\) cada grupo a qual os elementos \(i\), não fazem parte do mesmo;</div>
+
+
+--
+
+
+<div style="text-align: justify;">Em caso de queremos utilizar a silhueta média para cada grupo e por agrupamento (coeficiente de sulhueta médio), é dado por:</div>
+
+
+--
+
+
+<div style="text-align: center;">\(SM_j = {\sum_{i = 1}^{n_j}\frac{s(i)}{n_j}}\) e \(CSM = {\sum_{i=1}^{n}\frac{s(i)}{n}}\)</div>
+
+
+---
+
+```{r echo=FALSE, message=FALSE, results="hide", fig.align="center", fig.cap= "Figura 3: exemplo gráfico do coeficiente de silhueta médio (CMS)", fig.dim = c(13.7, 11)}
+
+library(factoextra)
+library(ggplot2)
+
+fviz_nbclust(Y, kmeans,k.max = 4, method = "silhouette" ) + theme_bw() + ylab("coeficiente silhueta médio") + xlab("Números de clusters")+
+  labs(title = "")+theme_get()
+```
+---
+```{r,echo=FALSE, message=FALSE, out.width="15%", out.height = "20%",  fig.align = 'left'}
+knitr::include_graphics("img/Opera Instantâneo_2023-11-03_174117_docs.google.com.png")
+```
+#####correlação cofenética
+
+
+<div style="text-align: justify; text-indent: 20px">Uma medida que visa medir o <strong>grau de distorção imposta ou não pela vertente hierárquica</strong>, com ideal de  realizar correlação entre a matriz D (matriz fenética) com a obtida junto ao dendrograma, conhecida como (matriz cofenética). Tal correlação pode ser obtida:
+
+--
+
+<div style="text-align: center;">\(r_{cof} = \frac{\sum_{i=1}{n}\sum_{j=i+1}{n}(c_{ij}-\bar{c})(s_{ij}-\bar{s})}{\sqrt{\sum_{i=1}^{n}\sum_{j=i+1}{n}(c_{ij}-\bar{c})^2} \sqrt{\sum_{i=1}^{n}\sum_{j=i+1}{n}(s_{ij}-\bar{s})^2}}\)</div>
+
+
+--
+
+
+- <div style="text-align: justify;">\(c_{ij}\): indica o nível de similaridade entre duas unidades obtidas junto a matriz cofenética;</div>
+
+
+--
+
+
+- <div style="text-align: justify;">\(s_{ij}\): indica o nível de similaridade entre duas unidades obtidas por meio da matriz D de dessemelhanças.</div>
+
+
+--
+
+
+Conforme Mayer (2002) outras duas medidas para se obter a correlação $r_{cof}$, sendo uma dela a média da similaridade c:
+
+<div style="text-align: center;">\(\bar{c} = \frac{2}{n(n-1)}\sum_{i=1}^{n}\sum_{j=i+1}^{n}c_{ij}\)
+e 
+
+\(\bar{s} = \frac{2}{n(n-1)}\sum_{i=1}^{n}\sum_{j=i+1}^{n}s_{ij}\)</div>
+
+---
+```{r echo=FALSE, message=FALSE, results="hide", fig.align="center", fig.cap= "Figura 3: Gráfico de barra, números e percentuais de mortalidade" , fig.dim = c(13.7, 11)}
+library(pacman)
+pacman::p_load(
+tidyverse,
+factoextra,
+corrplot,
+gridExtra,
+knitr,
+ggplot2, 
+readxl,
+grDevices
+)
+
+#mortalidade infantil de (faixa Etária: 1 ano a 30 dias de vida) regiões e estados
+estados <- read_excel("C:/Users/fabiano/Downloads/dados/dados mortalidade infantil-brasil-regiões-nordeste/estados/estados.xlsx")
+regioes <- read_excel("C:/Users/fabiano/Downloads/dados/dados mortalidade infantil-brasil-regiões-nordeste/regioes/regiões.xls")
+
+color1 = colorRampPalette(c("red","blue"))
+color2 = colorRampPalette(c("red","blue"))
+valor1 = color1(5)
+valor2 = color2(27)
+#obter a ordenação do total
+idx <- order(regioes$Total, decreasing = TRUE)
+# criar os níveis ordenados
+levels <- regioes$Região[idx]
+# criar um factor com níveis ordenados
+regioes$Região <- factor(regioes$Região, levels=levels, ordered=TRUE)
+
+
+plot1 = ggplot(regioes) +
+  aes(x = Região, y = Total, fill = Região )+
+  xlab("") + ylab("Número de mortes")+
+  geom_col(alpha = 0.9, width = 0.70 ) +
+  geom_text(aes(label = Percwntual), vjust = -0.1, size = 6) +
+  scale_x_discrete(labels = c("SUL", "SUDESTE","NORTE", "NORDESTE", "CENTRO-OESTE"))+
+  scale_y_continuous(limits = c(0,60000), breaks = seq(0,60000, 6000)) +
+  labs(title = "Orbitos infantis (28 dias até 1 ano de vida) ", subtitle = "Gráficos de Barras") +
+  theme(legend.position = "nome") + scale_fill_manual(values = valor1) +
+  geom_hline(yintercept = mean(regioes$Total), color = "black", linetype = "dashed")
+
+#obter a ordenação do total
+idx <- order(estados$total, decreasing = TRUE)
+idx
+#criar os níveis ordenados
+levels <- estados$estados[idx]
+#criar um factor com níveis ordenados
+estados$estados <- factor(estados$estados, levels=levels, ordered=TRUE)
+estados$estados
+
+plot2 = ggplot(estados) +
+  aes(x = estados, y = total, fill = estados )+
+  xlab("Mortalidade no Brasil (Regiões e Estados: 2011-2021)") + ylab("Número de mortes")+
+  geom_col(alpha = 0.9, width = 0.70) +
+  geom_text(aes(label = percentual, angle = 14), hjust = -0.04, vjust = -0.08, size = 5) +
+  scale_y_continuous(limits = c(0,23000), breaks = seq(0,23000, 2300)) +
+  theme(legend.position = "nome") + scale_fill_manual(values = valor2) + geom_hline(yintercept = mean(estados$total), color = "black", linetype = "dashed")
+
+graficos_combinados <- grid.arrange(plot1, plot2)
+
+```
+---
+```{r echo=FALSE, message=FALSE, results="hide", fig.align="center", fig.cap= "Figura 4: Gráfico de barra, números e percentuais de imunização" , fig.dim = c(13.7, 11)}
+
+library(pacman)
+pacman::p_load(
+tidyverse,
+factoextra,
+corrplot,
+gridExtra,
+knitr,
+ggplot2, 
+readxl,
+grDevices
+)
+
+#imunizações infantil de (faixa Etária: 1 ano a 30 dias de vida) regiões e estados
+estados <- read_excel("C:/Users/fabiano/Downloads/dados/dados imunização infantil  brasil-regiões-nordeste/estados/estados.xlsx")
+regioes <- read_excel("C:/Users/fabiano/Downloads/dados/dados imunização infantil  brasil-regiões-nordeste/regioes/R.xlsx")
+
+color1 = colorRampPalette(c("green","red"))
+color2 = colorRampPalette(c("green","red"))
+valor1 = color1(5)
+valor2 = color2(27)
+#obter a ordenação do total
+idx <- order(regioes$total, decreasing = TRUE)
+idx
+#criar os níveis ordenados
+levels <- regioes$Região[idx]
+#criar um factor com níveis ordenados
+regioes$Região <- factor(regioes$Região, levels=levels, ordered=TRUE)
+
+plot1 = ggplot(regioes)+
+  aes(x = Região, y = total, fill = Região )+
+  xlab("") + ylab("Número de Imunizados")+
+  geom_col(alpha = 0.9, width = 0.70 ) +
+  geom_text(aes(label = percentual), vjust = -0.1, size = 6) +
+  scale_y_continuous(limits = c(0,870000), breaks = seq(0,870000,87000)) +
+  scale_x_discrete(labels = c("SUL", "SUDESTE","NORTE", "NORDESTE", "CENTRO-OESTE"))+
+  labs(title = "Imunização infantil (28 dias até 1 ano de vida) ", subtitle = "Gráfico de Barras") +
+  theme(legend.position = "nome") + scale_fill_manual(values = valor1) +
+  geom_hline(yintercept = mean(regioes$total), color = "black", linetype = "dashed")
+
+#obter a ordenação do total
+idx <- order(estados$total, decreasing = TRUE)
+idx
+#criar os níveis ordenados
+levels <- estados$estados[idx]
+# criar um factor com níveis ordenados
+estados$estados <- factor(estados$estados, levels=levels, ordered=TRUE)
+estados$estados
+
+plot2 = ggplot(estados) +
+  aes(x = estados, y = total, fill = estados )+
+  xlab("Imunização no Brasil (Regiões e Estados: 2011-2021)") +
+  ylab("Número de Imunizados")+
+  geom_col(alpha = 1, width = 0.70) +
+  geom_text(aes(label = percentual,  angle = 14), hjust = -0.04, vjust = -0.08, size = 5)+
+  scale_y_continuous(limits = c(0,600000), breaks = seq(0,600000,60000))+
+  theme(legend.position = "nome")+ scale_fill_manual(values = valor2) +
+  geom_hline(yintercept = mean(estados$total), color = "black", linetype = "dashed")
+
+graficos_combinados2 = grid.arrange(plot1,plot2)
+
+```
+---
+```{r, echo=FALSE, message=FALSE, results="hide", fig.align="center", fig.cap= "Figura 5: Histogramas, visualização das densidades" , fig.dim = c(13.7, 11)}
+
+library(pacman)
+pacman::p_load(
+tidyverse,
+factoextra,
+corrplot,
+gridExtra,
+knitr,
+ggplot2, 
+readxl,
+grDevices
+)
+
+
+dendogramo_dados_ <- read_excel("C:/Users/fabiano/Downloads/dados/dados em forma não resumida/dendogramo (dados).xlsx")
+
+
+quebras = pretty(range(dendogramo_dados_$doses_aplicadas_),
+                 n = nclass.Sturges(dendogramo_dados_$doses_aplicadas_))
+
+plot1 = ggplot(dendogramo_dados_, aes(x = doses_aplicadas_/10000)) +
+  ylab("densidade")+ xlab("Doses aplicadas x(10000)") +
+  labs(title = "Histograma", subtitle = "") +  
+  geom_histogram(aes(y = after_stat(density)), fill ="#00FA9A", breaks = quebras/10000) +
+  geom_density(col = "red")+
+  scale_x_continuous(limits = c(0,60), breaks = seq(0,60,10))+
+  theme_bw()
+
+quebras = pretty(range(dendogramo_dados_$obitos_infantis_),
+                 n = nclass.Sturges(dendogramo_dados_$obitos_infantis_))
+
+plot2 = ggplot(dendogramo_dados_, aes(x = obitos_infantis_/1000)) +
+  ylab("densidade")+ xlab("Obitos infantis x(1000)") +
+  labs(title = "", subtitle = "") +  
+  geom_histogram(aes(y = after_stat(density)), fill ="#00FA9A", breaks = quebras/1000) +
+  geom_density(col = "red")+
+  scale_x_continuous(limits = c(0,70), breaks = seq(0,70,10))+
+  theme_bw()
+
+graficos_combinados <- grid.arrange(plot1, plot2, ncol = 2)
+```
+---
+
+<div style="text-align: center; margin-bottom: 20px;"> Tabela 1: Medidas descritivas </div>$$\begin{array}{ccc}
+\hline
+Medidas \hspace{0.2cm} Resumo & Imunização & Óbitos \\
+\hline
+Mediana & 25501 & 2706 \\
+Desvio \hspace{0.2cm} padrão & 114187 &4454 \\
+Máximo  & 587562 & 22197 \\
+Mínimo & 5160 & 966 \\
+\hline
+\end{array}$$ <div style="text-align: justify;text-indent: 20px;"> Medidas descritivas para ambas as variáveis, em todos os estados e distrito federal durante 2011-2021 houve um o maior valor máximo 22197 casos de mortalidade, porém, um total máximo de vacinação de 587562.</div>
+
+--
+
+<div style="text-align: center;"> Tabela 2: teste de correlação de Kendall</div> $$\begin{array}{cccc}
+\hline
+Hipóteses & Estatística \hspace{0.2cm} do \hspace{0.2cm} teste & P-valor & Correlação \\
+\hline
+H_0: \rho = 0 & Valor \hspace{0.2cm} observado & 1.763e-07 & Kendall
+\\
+H_1: \rho \neq 0 & \textit{T}=291 & & \tau = 0.6581197   \\
+\hline
+\end{array}$$ <div style="text-align: justify;text-indent: 20px;"> O P-valor sendo suficientemente pequeno que o nível de significância do teste que é de 0,05 (5%), logo rejeitamos a hipótese de que a correlação é nula.</div>
+
+
+---
+
+```{r, echo=FALSE, message=FALSE, results="hide", fig.align="center", fig.cap= "Figura 6: método do cotovelo" , fig.dim = c(13.7, 11)}
+
+library(factoextra)
+dendogramo_dados_1 = data.frame(dendogramo_dados_[,c(1,3,4)], row.names = 1)
+dendogramo_dados_1. = scale(dendogramo_dados_1)
+
+#método do cotovelo
+fviz_nbclust(dendogramo_dados_1., kmeans,k.max = 26, method = "wss") + theme_bw() + ylab("total de soma de quadrados")+ xlab("Números de clusters")+geom_vline(xintercept = 3, color = "blue", linetype = "dashed")+labs(title = "")
+```
+
+---
+```{r, echo=FALSE, message=FALSE, results="hide", fig.align="center", fig.cap= "Figura 7: Método do coeficiente silhueta médio (CSM)" , fig.dim = c(13.7, 11)}
+
+dendogramo_dados_1 = data.frame(dendogramo_dados_[,c(1,3,4)], row.names = 1)
+dendogramo_dados_1. = scale(dendogramo_dados_1)
+
+#método da silhueta
+fviz_nbclust(dendogramo_dados_1., hcut, k.max = 26, nstart = 100, method = "silhouette" ) +
+ theme_bw() + ylab("CSM") + xlab("Números de clusters")+
+ labs(title = "")
+
+```
+---
+
+<!-- ```{r, echo=FALSE, message=FALSE, results="hide", fig.align="center", fig.cap= "Figura 9: Dendrograma, normas de fusão simples" , fig.dim = c(13.7, 11)} -->
+<!-- dendogramo_dados_1 = data.frame(dendogramo_dados_[,c(1,3,4)], row.names = 1) -->
+<!-- dendogramo_dados_1. = scale(dendogramo_dados_1) -->
+
+<!-- l = get_dist(dendogramo_dados_1., method = "euclidian") -->
+<!-- fviz_dist(l,order = TRUE, -->
+<!--           show_labels = TRUE, -->
+<!--           lab_size = 9, -->
+<!--           gradient = list(low = "white", mid = "blue", high = "red") -->
+<!-- ) -->
+
+<!-- ``` -->
+
+
+```{r, echo=FALSE, message=FALSE, results="hide", fig.align="center", fig.cap= "Figura 8: Critério Centroide" , fig.dim = c(13.7, 11)}
+
+#critério centroide
+
+par(mfrow =c(2,2), mar = c(2,4,1,1))
+G=dist(dendogramo_dados_1., method = "euclidian")
+as.matrix(G)
+#utilizando a distância euclidiana
+G.hc8 = hclust(d = G, method = "centroid")
+plot(G.hc8, cex = 1, hang = -1, ylab = "DIST. EUCLIDIANA", main ='(Centroide)-CF = 0.97746')
+rect.hclust(G.hc8, k = 3, border = 2:4)
+
+matriz_cof = cophenetic(G.hc8)
+cor(G, matriz_cof)
+
+#utilizando a distância estatC-stica
+#par(mar = c(1,1,1))
+library(biotools)
+D = D2.dist(dendogramo_dados_1., cov(dendogramo_dados_1.), inverted= FALSE)
+as.matrix(D)
+G.hc9 = hclust(d = D, method = "centroid")
+plot(G.hc9, cex = 1, hang = -1, ylab = "DIST. MAHALANOBIS", main ='(Centroide)-CF = 0.94871')
+rect.hclust(G.hc9, k = 3, border = 2:4)
+
+matriz_cof = cophenetic(G.hc9)
+cor(D, matriz_cof)
+
+#utilizando a distC#ncia canberra
+O=dist(dendogramo_dados_1., method = "canberra")
+as.matrix(O)
+G.hc10 = hclust(d = O, method = "centroid")
+plot(G.hc10, cex = 1, hang = -1, ylab = "DIST. CANBERRA", main ='(Centroide)-CF = 0.91828')
+rect.hclust(G.hc10, k = 3, border = 2:4)
+
+matriz_cof = cophenetic(G.hc10)
+cor(O, matriz_cof)
+
+#utilizando a distância manhattam
+J=dist(dendogramo_dados_1., method = "manhattan")
+as.matrix(J)
+G.hc11 = hclust(d = J, method = "centroid")
+plot(G.hc11, cex = 1, hang = -1, ylab = "DIST MANHATTAN", main ='(Centroide)-CF = 0.97873')
+rect.hclust(G.hc11, k = 3, border = 2:4)
+
+matriz_cof = cophenetic(G.hc11)
+cor(J, matriz_cof)
+```
+---
+```{r, echo=FALSE, message=FALSE, results="hide", fig.align="center", fig.cap= "Figura 9: Critério Ward" , fig.dim = c(13.7, 11)}
+
+#critério ward
+
+par(mfrow =c(2,2), mar = c(2,4,1,1))
+G=dist(dendogramo_dados_1., method = "euclidian")
+as.matrix(G)
+#utilizando a distC"ncia euclidiana
+G.hc8 = hclust(d = G, method = "ward.D")
+plot(G.hc8, cex = 1, hang = -1, ylab = "DIST. EUCLIDIANA", main ='(Ward)-CF = 0.57366')
+rect.hclust(G.hc8, k = 3, border = 2:4)
+
+matriz_cof = cophenetic(G.hc8)
+cor(G, matriz_cof)
+
+#utilizando a distC"ncia estatC-stica
+#par(mar = c(1,1,1))
+library(biotools)
+D = D2.dist(dendogramo_dados_1., cov(dendogramo_dados_1.), inverted= FALSE)
+as.matrix(D)
+G.hc9 = hclust(d = D, method = "ward.D")
+plot(G.hc9, cex = 1, hang = -1, ylab = "DIST. MAHALANOBIS", main ='(Ward)-CF = 0.59624')
+rect.hclust(G.hc9, k = 3, border = 2:4)
+
+matriz_cof = cophenetic(G.hc9)
+cor(D, matriz_cof)
+
+#utilizando a distC#ncia canberra
+O=dist(dendogramo_dados_1., method = "canberra")
+as.matrix(O)
+G.hc10 = hclust(d = O, method = "ward.D")
+plot(G.hc10, cex = 1, hang = -1, ylab = "DIST. CANBERRA", main ='(Ward)-CF = 0.78525')
+rect.hclust(G.hc10, k = 3, border = 2:4)
+
+matriz_cof = cophenetic(G.hc10)
+cor(O, matriz_cof)
+
+#utilizando a distC#ncia mahatham
+J=dist(dendogramo_dados_1., method = "manhattan")
+as.matrix(J)
+G.hc11 = hclust(d = J, method = "ward.D")
+plot(G.hc11, cex = 1, hang = -1, ylab = "DIST. MANHATTAN", main ='(Ward)-CF = 0.60355')
+rect.hclust(G.hc11, k = 3, border = 2:4)
+
+matriz_cof = cophenetic(G.hc11)
+cor(J, matriz_cof)
+
+```
+---
+```{r, echo=FALSE, message=FALSE, results="hide", fig.align="center", fig.cap= "Figura 10: Critério de ligação Média" , fig.dim = c(13.7, 11)}
+
+#critério da ligação média
+
+par(mfrow =c(2,2), mar = c(2,4,1,1))
+G=dist(dendogramo_dados_1., method = "euclidian")
+as.matrix(G)
+#utilizando a distância euclidiana
+G.hc8 = hclust(d = G, method = "average")
+plot(G.hc8, cex = 1, hang = -1, ylab = "DIST. EUCLIDIANA", main ='(Média)-CF = 0.98064')
+rect.hclust(G.hc8, k = 3, border = 2:4)
+
+matriz_cof = cophenetic(G.hc8)
+cor(G, matriz_cof)
+
+#utilizando a distância estatC-stica
+#par(mar = c(1,1,1))
+library(biotools)
+D = D2.dist(dendogramo_dados_1., cov(dendogramo_dados_1.), inverted= FALSE)
+as.matrix(D)
+G.hc9 = hclust(d = D, method = "average")
+plot(G.hc9, cex = 1, hang = -1, ylab = "DIST. MAHALANOBIS", main ='(Média)-CF = 0.94920')
+rect.hclust(G.hc9, k = 3, border = 2:4)
+
+matriz_cof = cophenetic(G.hc9)
+cor(D, matriz_cof)
+
+#utilizando a distC#ncia canberra
+O=dist(dendogramo_dados_1., method = "canberra")
+as.matrix(O)
+G.hc10 = hclust(d = O, method = "average")
+plot(G.hc10, cex = 1, hang = -1, ylab = "DIST. CANBERRA", main ='(Média)-CF = 0.96756')
+rect.hclust(G.hc10, k = 3, border = 2:4)
+
+matriz_cof = cophenetic(G.hc10)
+cor(O, matriz_cof)
+
+#utilizando a distância manhattam
+J=dist(dendogramo_dados_1., method = "manhattan")
+as.matrix(J)
+G.hc11 = hclust(d = J, method = "average")
+plot(G.hc11, cex = 1, hang = -1, ylab = "DIST. MANHATTAN", main ='(Média)-CF = 0.98066')
+rect.hclust(G.hc11, k = 3, border = 2:4)
+
+matriz_cof = cophenetic(G.hc11)
+cor(J, matriz_cof)
+```
+---
+```{r, echo=FALSE, message=FALSE, results="hide", fig.align="center", fig.cap= "Figura 11: Avaliação (silhouette plot) métodos hierárquicos" , fig.dim = c(13.7, 11)}
+
+library(factoextra)
+library(gridExtra)
+
+sil5 = hcut(dendogramo_dados_1.,hc_func = "hclust",hc_method = "centroid", hc_metric = "canberra", k = 3)
+a = fviz_silhouette(sil5, show_labels = FALSE, label = FALSE, print.summary = FALSE)
+a = a + ylab("s(i)")+ labs(title = "Gráfico de silhueta", subtitle = "(Centroide)-CSM = 0.33294")   
+
+sil2 = hcut(dendogramo_dados_1.,hc_func = "hclust",hc_method = "median", hc_metric = "canberra", k = 3)
+b = fviz_silhouette(sil2, labels = FALSE, print.summary = FALSE)
+b = b + ylab("s(i)") + labs(title = "", subtitle = "(Média)-CSM = 0.32535") 
+
+sil6 = hcut(dendogramo_dados_1.,hc_func = "hclust",hc_method = "ward.D", hc_metric = "canberra", k = 3)
+#teve um o melhor desempenho, com apenas um cluster mal agrupado, porC)m agrupamentos fracos 4 e 5 cluster.
+c = fviz_silhouette(sil6, show_labels = FALSE, label = FALSE, print.summary = FALSE)
+c = c + ylab("s(i)") + labs(title = "", subtitle = "(Ward)-CSM = 0.57060")   
+
+grid.arrange(a,b,c, ncol = 3)
+```
+---
+```{r, echo=FALSE, message=FALSE, results="hide", fig.align="center", fig.cap= "Figura 12: Dendrograma, partição final" , fig.dim = c(13.7, 11)}
+
+#determinado o nB: de k = 3 , vamos elaborar o dendograma e colorir 
+
+library(factoextra)
+library(ggplot2)
+
+suppressWarnings({
+O = dist(dendogramo_dados_1., method = "canberra")
+as.matrix(O)
+O.hc1 = hclust(d = O, method = "ward.D")
+d = fviz_dend(O.hc1,
+          horiz = FALSE,
+          k = 3,
+          cex=1,
+          k_colors = c("red", "green", "blue"),
+          rect = TRUE,
+          ggtheme = theme_bw()
+) 
+d + labs(title = 'Estados brasileiros',subtitle ="Ligação Ward") + ylab('DIST. CANBERRA')
+})
+```
+---
+<!-- <div style="text-align: center; margin-bottom: 20px;"> Tabela 3: Dispersão dos conglomerados (Algoritmo ward) </div> -->
+<!-- $$\begin{array}{cccc} -->
+<!-- \hline -->
+<!-- Cluters  & Silhueta \hspace{0.2cm} Média & Desvio \hspace{0.2cm} Padrão (óbitos) & Desvio \hspace{0.2cm} Padrão (vacinação)\\ -->
+<!-- \hline -->
+<!-- 1 & 0,78717671 & 776 & 7614 \\ -->
+<!-- 2 & 0,58281543 & 901 & 6040 \\ -->
+<!-- 3 & 0,09777147 & 6416 & 184913 \\ -->
+<!-- \hline -->
+<!-- \end{array}$$ -->
+<!-- Podemos observar que apenas o cluster 3 possui menor valor em média, os outros como estão mais próximo de 1, isso simboliza o quão bem estão os elementos têm pouca variação, assim como os desvios padrões. -->
+<!-- -- -->
+<!-- <div style="text-align: center; margin-bottom: 20px;"> Tabela 4: Índice de Rand e Rand ajustado, similaridade entre os métodos de ligação. </div> -->
+<!-- $$\begin{array}{ccc} -->
+<!-- \hline -->
+<!--  & Rand & Rand \hspace{0.2cm} ajustado \\ -->
+<!-- \hline -->
+<!-- (a) & 0,4700855 & 0,08609105 \\ -->
+<!-- (b) & 0,4700855 & 0,08609105 \\ -->
+<!-- (c) & 0,8632479 & 0,44941176 \\ -->
+<!-- \hline -->
+<!-- \end{array}$$ -->
+
+```{r, echo=FALSE, message=FALSE, results="hide", fig.align="center", fig.cap= "Figura 13: algoritmo K-means" , fig.dim = c(13.7, 11)}
+
+library(ggplot2)
+library(factoextra)
+library(cluster)
+library(gridExtra)
+
+set.seed(111)
+#Kdt = kmeans(dendogramo_dados_1.,3, algorithm = "Hartigan-Wong")
+Kdt = kmeans(dendogramo_dados_1.,3, algorithm = "Lloyd")
+#Kdt = kmeans(dendogramo_dados_1.,3, algorithm = "MacQueen")
+#Kdt = kmeans(dendogramo_dados_1.,3, algorithm = "Forgy")
+
+#OU
+
+set.seed(111)
+#KM = eclust(dendogramo_dados_1., FUNcluster = "kmeans", k = 3, nstart = 100)
+#KM 
+fviz_cluster(Kdt,
+                  data = dendogramo_dados_1.,
+                  geom = c("point","text"),
+                  shape = 19,
+                  ellipse.type= "convex",
+                  main = "k-means",
+                  labelsize = 15,
+ ) + theme_bw() + ylab("Óbitos infantis") + xlab("doses aplicadas")+ scale_y_continuous(limits = c(-1,4), breaks = seq(0,4))
+```
+---
+```{r, echo=FALSE, message=FALSE, results="hide", fig.align="center", fig.cap= "Figura 14: algoritmo PAM" , fig.dim = c(13.7, 11)}
+set.seed(111)
+paam = pam(dendogramo_dados_1., 3, metric = "manhattan", medoids = "random", nstart = 100, trace.lev = TRUE)
+
+fviz_cluster(paam, 
+                 data = dendogramo_dados_1.,
+                 geom = c("point", "text"),
+                 main = "Partitioning Around Medoids (PAM)",
+                 shape = 19,
+                 ellipse.type = "convex",
+                 labelsize = 15
+) + theme_bw() + ylab("Óbitos infantis") + xlab("doses aplicadas") + scale_y_continuous(limits = c(-1,4), breaks = seq(0,4))
+```
+---
+```{r, echo=FALSE, message=FALSE, results="hide", fig.align="center", fig.cap= "Figura 15: algoritmo FCM" , fig.dim = c(13.7, 11)}
+set.seed(111)
+fzzy = fanny(dendogramo_dados_1., metric = "euclidean", k = 3)
+fviz_cluster(fzzy, 
+                 data = dendogramo_dados_1.,
+                 geom = c("point", "text"),
+                 main = "fuzzy c-means (FCM)",
+                 ellipse.type = "convex",
+                 shape = 19,
+                 labelsize = 15
+) + theme_bw() + ylab("óbitos infantis") + xlab("doses aplicadas") + scale_y_continuous(limits = c(-1,4), breaks = seq(0,4))
+```
+---
+
+```{r, echo=FALSE, message=FALSE, results="hide", fig.align="center", fig.cap= "Figura 16: Avaliação (silhouette plot) métodos não hierárquicos" ,fig.dim = c(13.7, 11)}
+
+library(gridExtra)
+library(factoextra)
+library(ggplot2)
+library(cluster)
+
+set.seed(111)
+km = kmeans(dendogramo_dados_1., centers = 3)
+
+silhueta <- silhouette(km$cluster, dist(dendogramo_dados_1.))
+
+# Criar o gráfico de silhueta usando factoextra
+a = fviz_silhouette(silhueta) + ylab("s(i)") + labs(title = "Gráfico de silhueta", subtitle = "(k-means)CSM = 0,56600")
+
+set.seed(111)
+paam = pam(dendogramo_dados_1., 3, metric = "manhattan", medoids = "random", nstart = 100, trace.lev = TRUE)
+
+b = fviz_silhouette(paam, label = FALSE, print.summary = TRUE) + ylab("s(i)") + labs(title = "", subtitle = "(PAM)-CSM = 0.54806")
+
+set.seed(111)
+fuzzy = fanny(dendogramo_dados_1., metric = "euclidean", k = 3)
+
+c = fviz_silhouette(fuzzy, label = FALSE, labelsize = 0.5, titlesize = 10, print.summary = TRUE) + ylab("s(i)") + labs(title = "", subtitle = "(FCM)-CSM = 0,46501")
+
+grid.arrange(a,b,c, ncol = 3)
+```
+---
+Hierarquia dos grupos em mortes e imunização, método Ward. 
+
+- Santa Catarina, Paraná, Rio Grande do Sul, São Paulo, Bahia, Minas Gerais e Rio de Janeiro;
+- Amazonas, Pará, Ceará, Maranhão e Pernambuco;
+- Roraima, Rondônia, Sergipe, Amapá, Acre, Tocantins, Goiás, Rio grande do Norte, Espírito Santo, Mato Grosso, Mato Grosso do Sul, Alagoas, Piauí, Paraíba e o Distrito Federal
+---
+
+####REFERÊNCIAS
+
+BRASIL. Ministério da Saúde. **DATASUS (DATASUS  Tecnologia da Informação a Serviço do SUS)**. Informações estatísticas - óbitos infantis [201-]. Disponível em: http://tabnet.datasus.gov.br/cgi/deftohtm.exe?sim/cnv/obt10uf.def. Acesso em: 04 jun. 2023.
+
+BRASIL. Ministério da Saúde. **SI-PNI (Sistema de Informação do Programa Nacional de Imunizações). Informações estatísticas - doses aplicadas.** [2013]. Disponível em: http://pni.datasus.gov.br/inf_estatistica_dose_dupla.asp. Acesso em: 04 jun. 2023.
+
+QUINTAL, G. M. C. C. **Análise de clusters aplicada ao Sucesso/Insucesso em Matemática**. 2006. 184 p. Dissertação de mestrado — Universidade da Madeira Departamento de Matemática e Engenharias, Funchal, 2006. Disponível em: https://digituma.uma.pt. Acesso em: 17 out. 2022.
+
+KASSAMBARA, Alboukadel. **K-Medoids-PAM concept. In: K-Medoids in R: Algorithm and Practical Examples.** [S. l.], 2018. Disponível em: https://www.datanovia.com/en/lessons/k-medoids-in-r-algorithm-and-practical-examples/. Acesso em: 2 ago. 2023.
+
+FAVERO, L. P.; BELFIORE, P. **MANUAL DA ANÁLISE DE DADOS: Estatística e Modelagem Multivariada com Excel, SPSS, e Stata. 1ª** . ed. Rio de Janeiro: Elsevier Editora, 2017. 1187 p.
+
+---
+```{r,echo=FALSE, message=FALSE, out.width="100%", out.height = "100%",  fig.align = 'center'}
+knitr::include_graphics("img/Opera Instantâneo_2023-11-04_150854_docs.google.com.png")
+```
+---
+```{r,echo=FALSE, message=FALSE, out.width="100%", out.height = "100%",  fig.align = 'left'}
+knitr::include_graphics("img/5YcO.gif")
+```
+##Um forte abraço, nos vemos em breve quem sabe! ;)
