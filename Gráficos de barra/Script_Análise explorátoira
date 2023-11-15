@@ -1,0 +1,98 @@
+library(ggplot2)
+library(gridExtra)
+library(readxl)
+
+#mortalidade infantil de (faixa Etária: 1 ano a 30 dias de vida) regiões e estados
+estados <- read_excel("C:/Users/fabiano/Downloads/dados/dados mortalidade infantil-brasil-regiões-nordeste/estados/estados.xlsx")
+regioes <- read_excel("C:/Users/fabiano/Downloads/dados/dados mortalidade infantil-brasil-regiões-nordeste/regioes/regiões.xls")
+
+color1 = colorRampPalette(c("red","blue"))
+color2 = colorRampPalette(c("red","blue"))
+valor1 = color1(5)
+valor2 = color2(27)
+#obter a ordenação do total
+idx <- order(regioes$Total, decreasing = TRUE)
+# criar os níveis ordenados
+levels <- regioes$Região[idx]
+# criar um factor com níveis ordenados
+regioes$Região <- factor(regioes$Região, levels=levels, ordered=TRUE)
+
+
+plot1 = ggplot(regioes) +
+  aes(x = Região, y = Total, fill = Região )+
+  xlab("") + ylab("Número de mortes")+
+  geom_col(alpha = 0.9, width = 0.70 ) +
+  geom_text(aes(label = Percwntual), vjust = -0.1, size = 6) +
+  scale_x_discrete(labels = c("SUL", "SUDESTE","NORTE", "NORDESTE", "CENTRO-OESTE"))+
+  scale_y_continuous(limits = c(0,60000), breaks = seq(0,60000, 6000)) +
+  labs(title = "Orbitos infantis (28 dias até 1 ano de vida) ", subtitle = "Gráficos de Barras") +
+  theme(legend.position = "nome") + scale_fill_manual(values = valor1) +
+  geom_hline(yintercept = mean(regioes$Total), color = "black", linetype = "dashed")
+
+#obter a ordenação do total
+idx <- order(estados$total, decreasing = TRUE)
+idx
+#criar os níveis ordenados
+levels <- estados$estados[idx]
+#criar um factor com níveis ordenados
+estados$estados <- factor(estados$estados, levels=levels, ordered=TRUE)
+estados$estados
+
+plot2 = ggplot(estados) +
+  aes(x = estados, y = total, fill = estados )+
+  xlab("Mortalidade no Brasil (Regiões e Estados: 2011-2021)") + ylab("Número de mortes")+
+  geom_col(alpha = 0.9, width = 0.70) +
+  geom_text(aes(label = percentual, angle = 14), hjust = -0.04, vjust = -0.08, size = 5) +
+  scale_y_continuous(limits = c(0,23000), breaks = seq(0,23000, 2300)) +
+  theme(legend.position = "nome") + scale_fill_manual(values = valor2) + geom_hline(yintercept = mean(estados$total), color = "black", linetype = "dashed")
+
+graficos_combinados <- grid.arrange(plot1, plot2)
+
+
+#imunizações infantil de (faixa Etária: 1 ano a 30 dias de vida) regiões e estados
+estados <- read_excel("C:/Users/fabiano/Downloads/dados/dados imunização infantil  brasil-regiões-nordeste/estados/estados.xlsx")
+regioes <- read_excel("C:/Users/fabiano/Downloads/dados/dados imunização infantil  brasil-regiões-nordeste/regioes/R.xlsx")
+
+color1 = colorRampPalette(c("green","red"))
+color2 = colorRampPalette(c("green","red"))
+valor1 = color1(5)
+valor2 = color2(27)
+#obter a ordenação do total
+idx <- order(regioes$total, decreasing = TRUE)
+idx
+#criar os níveis ordenados
+levels <- regioes$Região[idx]
+#criar um factor com níveis ordenados
+regioes$Região <- factor(regioes$Região, levels=levels, ordered=TRUE)
+
+plot1 = ggplot(regioes)+
+  aes(x = Região, y = total, fill = Região )+
+  xlab("") + ylab("Número de Imunizados")+
+  geom_col(alpha = 0.9, width = 0.70 ) +
+  geom_text(aes(label = percentual), vjust = -0.1, size = 6) +
+  scale_y_continuous(limits = c(0,870000), breaks = seq(0,870000,87000)) +
+  scale_x_discrete(labels = c("SUL", "SUDESTE","NORTE", "NORDESTE", "CENTRO-OESTE"))+
+  labs(title = "Imunização infantil (28 dias até 1 ano de vida) ", subtitle = "Gráfico de Barras") +
+  theme(legend.position = "nome") + scale_fill_manual(values = valor1) +
+  geom_hline(yintercept = mean(regioes$total), color = "black", linetype = "dashed")
+
+#obter a ordenação do total
+idx <- order(estados$total, decreasing = TRUE)
+idx
+#criar os níveis ordenados
+levels <- estados$estados[idx]
+# criar um factor com níveis ordenados
+estados$estados <- factor(estados$estados, levels=levels, ordered=TRUE)
+estados$estados
+
+plot2 = ggplot(estados) +
+  aes(x = estados, y = total, fill = estados )+
+  xlab("Imunização no Brasil (Regiões e Estados: 2011-2021)") +
+  ylab("Número de Imunizados")+
+  geom_col(alpha = 1, width = 0.70) +
+  geom_text(aes(label = percentual,  angle = 14), hjust = -0.04, vjust = -0.08, size = 5)+
+  scale_y_continuous(limits = c(0,600000), breaks = seq(0,600000,60000))+
+  theme(legend.position = "nome")+ scale_fill_manual(values = valor2) +
+  geom_hline(yintercept = mean(estados$total), color = "black", linetype = "dashed")
+
+graficos_combinados2 = grid.arrange(plot1,plot2)
